@@ -82,3 +82,4 @@
     </section>
     @include('costumer.partials.popular-products')
 @endsection
+{{-- test account --}}
