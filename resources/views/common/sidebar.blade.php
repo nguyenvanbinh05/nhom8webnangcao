@@ -1,13 +1,13 @@
 <div class="sidebar">
     <div class="sidebar__header">
-        <i class="fa-solid fa-bars"></i>
-        <h2 class="sidebar__title">Coffee Admin</h2>
+        <!-- <i class="fa-solid fa-bars"></i> -->
+        <h2 class="sidebar__title">Coffee</h2>
     </div>
     <ul class="sidebar__menu">
         <li class="sidebar__item {{request()->routeIs('homePage') ? 'sidebar__item--active' : ''}}">
             <a href="{{ route('homePage') }}" class="sidebar__link">
                 <i class="fas fa-home sidebar__icon"></i>
-                <span class="sidebar__text">Dashboard</span>
+                <span class="sidebar__text">Trang chủ</span>
             </a>
         </li>
         <li class="sidebar__item {{request()->routeIs('pos') ? 'sidebar__item--active' : ''}}">
@@ -50,11 +50,11 @@
                 </div>
             </a>
             <ul class="sidebar__submenu sidebar__submenu--hidden">
-                <li class="sidebar__subitem"><a href="{{ route('ingredientManagement') }}" class="sidebar__sublink">danh sách nguyên liệu</a></li>
-                <li class="sidebar__subitem"><a href="{{ route('supplierManagement') }}" class="sidebar__sublink">Nhà cung cấp</a></li>
-                <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">nhập nguyên liệu</a></li>
+                <li class="sidebar__subitem"><a href="{{ route('ingredients.index') }}" class="sidebar__sublink">danh sách nguyên liệu</a></li>
+                <li class="sidebar__subitem"><a href="{{ route('supplier.index') }}" class="sidebar__sublink">Nhà cung cấp</a></li>
+                <!-- <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">nhập nguyên liệu</a></li>
                 <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">xuất nguyên liệu</a></li>
-                <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">lịch sử nhập-xuất</a></li>
+                <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">lịch sử nhập-xuất</a></li> -->
             </ul>
         </li>
         <li class="sidebar__item sidebar__item--logout">

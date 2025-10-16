@@ -46,7 +46,7 @@ html {
     top: 0;
     left: 0;
     height: 100vh;
-    padding-top: 40px;
+    padding-top: 18px;
     background: white;
     display: flex;
     flex-direction: column;
@@ -146,7 +146,6 @@ html {
 
 .mainContent {
     width: calc(100% - calc(var(--width-sidebar) + 53px));
-    height: 640px;
     left: var(--width-sidebar);
     position: absolute;
     margin: 30px 33px 0 20px;
@@ -205,7 +204,8 @@ html {
     margin-bottom: 20px;
 }
 /* ==================== button add form ==================== */
-.buttonAddForm {
+.buttonAddForm,
+#buttonAddFroduct {
     width: 100%;
     padding: 8px 20px;
     max-width: 140px;
@@ -220,7 +220,8 @@ html {
     background-color: var(--button-seccess);
 }
 
-.buttonAddForm span {
+.buttonAddForm span,
+#buttonAddFroduct span {
     font-size: 1.6rem;
 }
 
@@ -681,6 +682,230 @@ html {
 
 .checkout__pay-btn:hover {
     background: #218838;
+}
+
+
+
+/* ==================== Thêm mới sản phẩm ==================== */
+
+.product-form__header {
+    font-size: 2.6rem;
+    margin-bottom: 40px;
+}
+
+.product-form__group {
+    display: flex;
+    gap: 20px;
+}
+
+/* Field đơn */
+.product-form__field,
+.product-form__field-group {
+    margin-bottom: 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-form__label {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 10px 4px;
+}
+
+.product-form__label span {
+    color: red;
+}
+
+#productCode-form {
+    max-width: 400px;
+}
+
+.product-form__input,
+.product-form__select,
+.product-form__textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #d4d4d4;
+    font-size: 1.5rem;
+    transition: all 0.3s;
+    background: #fafafa;
+}
+
+.product-form__input:focus,
+.product-form__select:focus,
+.product-form__textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+    background: #fff;
+}
+
+.product-form__textarea {
+    min-height: 100px;
+}
+
+/* Nút bấm */
+.product-form__button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.product-form__button {
+    min-width: 150px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.6rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.product-form__button--cancel {
+    background: #f3f4f6;
+    color: #444;
+}
+
+.product-form__button--cancel:hover {
+    background: #e5e7eb;
+}
+
+.product-form__button--save {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.product-form__button--save:hover {
+    background: #2563eb;
+}
+
+.product-form__image-box {
+    position: relative;
+    border: 2px dashed #d4d4d4;
+    border-radius: 8px;
+    padding: 2px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    background: #fafafa;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-form__image-box:hover {
+    border-color: #3b82f6;
+}
+
+.product-form__file {
+    display: none;
+}
+
+.product-form__field-group {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.product-form__fieldchild {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.product-form__fieldchild:last-child {
+    margin-right: 0;
+}
+
+.product-form__image-placeholder {
+    color: #666;
+    font-size: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-uploadFile {
+    font-size: 6rem;
+    margin-bottom: 8px;
+}
+
+.product-form__image-preview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.product-form__input#unit {
+    width: 150px;
+    height: 40px;
+}
+
+.product-form__fieldchild .product-form__label {
+    margin: 0;
+}
+
+.product-form__checkbox-group {
+    font-size: 1.6rem;
+}
+
+.product-form__checkbox-group label {
+    margin-right: 6px;
+}
+
+.product-form__checkbox-group label:last-child {
+    margin-right: 0;
+}
+
+.product-form__additional-images {
+    border: 1px solid #d4d4d4;
+    border-radius: 8px;
+    min-height: 80px;
+    max-height: 189px;
+    padding: 10px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.product-form__additional-action {
+    border: 2px dashed #6ba3fd;
+    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    color: #6ba3fd;
+    transition: all 0.3s;
+}
+
+.product-form__additional-action:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.product-form__image-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    max-height: 168px;
+    grid-auto-rows: auto;
+    gap: 8px;
+    overflow-y: auto;
+}
+
+.product-form__image-list--item {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #d4d4d4;
+    border-radius: 6px;
 }
 
 

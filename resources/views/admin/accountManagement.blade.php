@@ -7,14 +7,14 @@
 <div class="content__body">
     <div class="content__header">
         <!-- Search -->
-        <div class="search">
+        <!-- <div class="search">
             <input type="text" class="search__input" placeholder="Tìm kiếm theo id, tên sản sản phẩm...">
             <button class="search__btn">
                 <i class="fa-solid fa-magnifying-glass search__icon"></i>
             </button>
-        </div>
+        </div> -->
         <!-- Action buttons -->
-        <a href="#" class="button-add">
+        <a href="#" class="buttonAddForm">
             <i class="fa-solid fa-plus"></i>
             <span>Thêm mới</span>
         </a>
@@ -42,12 +42,7 @@
                     <td class="table__cell">0901234567</td>
                     <td class="table__cell">a.admin@example.com</td>
                     <td class="table__cell">2025-01-10</td>
-                    <td class="table__cell">
-                        <select>
-                            <option value="kich_hoat">Kích hoạt</option>
-                            <option value="vo_hieu_hoa">Vô hiệu hóa</option>
-                        </select>
-                    </td>
+                    <td class="table__cell">Kích hoạt</td>
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i
@@ -84,12 +79,7 @@
                     <td class="table__cell">0912345678</td>
                     <td class="table__cell">b.staff@example.com</td>
                     <td class="table__cell">2025-02-12</td>
-                    <td class="table__cell">
-                        <select>
-                            <option value="kich_hoat">Kích hoạt</option>
-                            <option value="vo_hieu_hoa">Vô hiệu hóa</option>
-                        </select>
-                    </td>
+                    <td class="table__cell">kích hoạt</td>
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i
@@ -126,12 +116,7 @@
                     <td class="table__cell">0987654321</td>
                     <td class="table__cell">c.customer@example.com</td>
                     <td class="table__cell">2025-03-05</td>
-                    <td class="table__cell">
-                        <select>
-                            <option value="kich_hoat">Kích hoạt</option>
-                            <option value="vo_hieu_hoa">Vô hiệu hóa</option>
-                        </select>
-                    </td>
+                    <td class="table__cell">Vô hiệu hóa</td>
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i

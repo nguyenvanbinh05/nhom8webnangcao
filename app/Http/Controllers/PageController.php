@@ -12,6 +12,9 @@ class PageController extends Controller
     public function productManagement(){
         return view('admin.productManagement');
     }
+    public function productAdd(){
+        return view('admin.productAdd');
+    }
     public function accountManagement(){
         return view('admin.accountManagement');
     }

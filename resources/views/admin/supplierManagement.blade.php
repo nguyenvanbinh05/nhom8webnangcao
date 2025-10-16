@@ -27,38 +27,34 @@
             </tr>
         </thead>
         <tbody class="table__body">
+            @forelse ($suppliers as $index => $supplier)
             <tr class="table__row">
-                <td class="table__cell">1</td>
-                <td class="table__cell name">Công ty ABC</td>
-                <td class="table__cell phone">0123456789</td>
-                <td class="table__cell email">abc@example.com</td>
-                <td class="table__cell address">Hà Nội</td>
-                <td class="table__cell note">cung cấp nguyên liệu ... </td>
+                <td class="table__cell">{{ $index + 1 }}</td>
+                <td class="table__cell name">{{ $supplier->name }}</td>
+                <td class="table__cell phone">{{ $supplier->phone }}</td>
+                <td class="table__cell email">{{ $supplier->email }}</td>
+                <td class="table__cell address">{{ $supplier->address }}</td>
+                <td class="table__cell note">{{ $supplier->note }}</td>
                 <td class="table__cell actions-column">
                     <div class="action-item">
-                        <button class="actions__btn buttonEditForm"><i
-                                class="fa-solid fa-pen-to-square actions__icon"></i></button>
-                        <button class="actions__btn"><i
-                                class="fa-solid fa-trash actions__icon"></i></button>
+                        <button class="actions__btn buttonEditForm" data-id="{{ $supplier->id }}">
+                            <i class="fa-solid fa-pen-to-square actions__icon"></i>
+                        </button>
+                        <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button class="actions__btn" type="submit" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                <i class="fa-solid fa-trash actions__icon"></i>
+                            </button>
+                        </form>
                     </div>
                 </td>
             </tr>
-            <tr class="table__row">
-                <td class="table__cell">2</td>
-                <td class="table__cell">Công ty XYZ</td>
-                <td class="table__cell">0987654321</td>
-                <td class="table__cell">xyz@example.com</td>
-                <td class="table__cell">Hồ Chí Minh</td>
-                <td class="table__cell">cung cấp nguyên liệu ... </td>
-                <td class="table__cell actions-column">
-                    <div class="action-item">
-                        <button class="actions__btn"><i
-                                class="fa-solid fa-pen-to-square actions__icon"></i></button>
-                        <button class="actions__btn"><i
-                                class="fa-solid fa-trash actions__icon"></i></button>
-                    </div>
-                </td>
+            @empty
+            <tr>
+                <td colspan="7" class="table__cell">Không có nhà cung cấp nào.</td>
             </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
