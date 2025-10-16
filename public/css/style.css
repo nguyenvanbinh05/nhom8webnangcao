@@ -125,6 +125,11 @@ a {
     font-size: 1.6rem;
     font-weight: 500;
 }
+.chevron {
+    color: #f6f6f6;
+    background-color: #f6f6f6;
+    border-radius: 999px;
+}
 .search-account small a {
     font-size: 1.4rem;
     opacity: 0.9;
@@ -240,7 +245,6 @@ a {
     }
 }
 /* ================*/
-/* Bố cục chung khu icon bên phải (nếu cần) */
 .search-account ul {
     display: flex;
     align-items: center;
@@ -279,6 +283,7 @@ a {
     max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #f6f6f6;
 }
 .chevron {
     transition: transform 0.2s ease;
@@ -299,8 +304,6 @@ a {
     border-radius: 12px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-
-    /* Ẩn mặc định + hiệu ứng */
     opacity: 0;
     transform: translateY(6px);
     pointer-events: none;

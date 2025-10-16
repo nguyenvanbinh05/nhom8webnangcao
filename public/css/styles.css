@@ -87,7 +87,6 @@ html {
     font-size: 1.6rem;
 }
 
-
 .sidebar__item--active .sidebar__link .sidebar__icon,
 .sidebar__item--active .sidebar__link .sidebar__text {
     color: var(--color-active_sidebar) !important;
@@ -146,6 +145,7 @@ html {
 
 .mainContent {
     width: calc(100% - calc(var(--width-sidebar) + 53px));
+    height: 100vh;
     left: var(--width-sidebar);
     position: absolute;
     margin: 30px 33px 0 20px;
@@ -196,7 +196,6 @@ html {
     margin-right: 18px;
 }
 
-
 /* ==================== Product Management ==================== */
 /* ========== list product ========== */
 
@@ -227,7 +226,7 @@ html {
 
 /* ========== table ========== */
 
-.table{
+.table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid var(--border-box);
@@ -319,7 +318,6 @@ html {
 .sidebar__submenu--hidden.dropdown-active {
     display: block;
 }
-
 
 /* ==================== form add new category ==================== */
 
@@ -495,7 +493,7 @@ html {
     justify-content: space-between;
 }
 
-.pos__option .search input{
+.pos__option .search input {
     border: 0;
     outline: 0;
     padding: 8px 0 8px 10px;
@@ -503,7 +501,7 @@ html {
     font-size: 1.3rem;
 }
 
-.pos__option .search .search__btn{
+.pos__option .search .search__btn {
     padding: 0 16px;
     border: 0;
     background-color: transparent;
@@ -549,7 +547,7 @@ html {
     font-size: 1.9rem;
     font-weight: bold;
     margin-bottom: 15px;
-    padding-bottom:15px;
+    padding-bottom: 15px;
     text-align: center;
 }
 
@@ -683,8 +681,6 @@ html {
 .checkout__pay-btn:hover {
     background: #218838;
 }
-
-
 
 /* ==================== Thêm mới sản phẩm ==================== */
 
@@ -908,7 +904,6 @@ html {
     border-radius: 6px;
 }
 
-
 /* ========== ========== */
 .sidebar__expanded {
     width: 60px;
@@ -922,5 +917,140 @@ html {
     to {
         opacity: 0;
         display: none;
+    }
+}
+/* ======thêm nút đăng nhập đăng xuất cho admin========== */
+.account-area {
+    position: relative;
+}
+.account-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 10px;
+    line-height: 1;
+}
+.account-btn:focus-visible {
+    outline: 2px solid #8aa7ff;
+    outline-offset: 2px;
+}
+.account-icon {
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+.account-name {
+    font-weight: 600;
+    white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #f6f6f6;
+}
+.chevron {
+    transition: transform 0.2s ease;
+    transform: translateY(1px) rotate(0deg);
+    color: #f6f6f6;
+    background-color: #f6f6f6;
+    border-radius: 999px;
+}
+.login-logout {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    gap: 3px;
+    text-align: left;
+}
+.login-logout a {
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+.account-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 220px;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.account-menu li {
+    margin: 0;
+}
+.account-menu li a,
+.account-menu .logout-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: #222;
+}
+.account-menu li a:hover,
+.account-menu .logout-btn:hover {
+    background: #f6f6f6;
+}
+.account-menu li a:focus-visible,
+.account-menu .logout-btn:focus-visible {
+    outline: 2px solid #8aa7ff;
+    outline-offset: 2px;
+}
+
+.account-menu .separator {
+    height: 1px;
+    background: #eee;
+    margin: 6px 0;
+}
+
+/* Mở dropdown: hover (desktop) + focus-within (click/tab: mobile + a11y) */
+.account-dropdown:hover > .account-menu,
+.account-dropdown:focus-within > .account-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.account-dropdown:hover > .account-btn .chevron,
+.account-dropdown:focus-within > .account-btn .chevron {
+    transform: translateY(1px) rotate(180deg);
+}
+
+/* Dark header (nếu header có nền tối gán .dark) */
+.header.dark .account-menu {
+    background: #1f1f1f;
+    border-color: #333;
+}
+.header.dark .account-menu li a,
+.header.dark .account-menu .logout-btn {
+    color: #fff;
+}
+.header.dark .account-menu li a:hover,
+.header.dark .account-menu .logout-btn:hover {
+    background: #2a2a2a;
+}
+
+/* Responsive: nếu màn nhỏ, menu rộng hơn một chút cho dễ bấm */
+@media (max-width: 768px) {
+    .account-menu {
+        min-width: 260px;
     }
 }

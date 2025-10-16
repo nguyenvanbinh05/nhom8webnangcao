@@ -22,46 +22,77 @@
                 <span class="sidebar__text">Quản lý đơn hàng</span>
             </a>
         </li>
-        <li class="sidebar__item {{ in_array(Route::currentRouteName(), ['productManagement', 'categoryManagement']) ? 'sidebar__item--active' : '' }}">
-            <a href="#" class="sidebar__link sidebar__link-dropdown">
-                <i class="fas fa-boxes sidebar__icon"></i>
-                <div class="sidebar__dropdowm-text">
-                    <span class="sidebar__text">Quản lý sản phẩm</span>
-                    <i class="fa-solid fa-chevron-down dropdown__icon"></i>
-                </div>
-            </a>
-            <ul class="sidebar__submenu sidebar__submenu--hidden">
-                <li class="sidebar__subitem"><a href="{{ route('productManagement') }}" class="sidebar__sublink">danh sách sản phẩm</a></li>
-                <li class="sidebar__subitem"><a href="{{ route('categoryManagement') }}" class="sidebar__sublink">danh mục sản phảm</a></li>
-            </ul>
-        </li>
-        <li class="sidebar__item {{request()->routeIs('accountManagement') ? 'sidebar__item--active' : ''}}">
-            <a href="{{ route('accountManagement') }}" class="sidebar__link">
-                <i class="fas fa-users sidebar__icon"></i>
-                <span class="sidebar__text">Quản lý tài khoản</span>
-            </a>
-        </li>
-        <li class="sidebar__item">
-            <a href="#" class="sidebar__link sidebar__link-dropdown">
-                <i class="fas fa-warehouse sidebar__icon"></i>
-                <div class="sidebar__dropdowm-text">
-                    <span class="sidebar__text">Quản lý kho nguyên liệu</span>
-                    <i class="fa-solid fa-chevron-down dropdown__icon"></i>
-                </div>
-            </a>
-            <ul class="sidebar__submenu sidebar__submenu--hidden">
-                <li class="sidebar__subitem"><a href="{{ route('ingredients.index') }}" class="sidebar__sublink">danh sách nguyên liệu</a></li>
-                <li class="sidebar__subitem"><a href="{{ route('supplier.index') }}" class="sidebar__sublink">Nhà cung cấp</a></li>
-                <!-- <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">nhập nguyên liệu</a></li>
-                <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">xuất nguyên liệu</a></li>
-                <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">lịch sử nhập-xuất</a></li> -->
-            </ul>
-        </li>
+        @if(Auth::user()->role === 'admin')
+            <li
+                class="sidebar__item {{ in_array(Route::currentRouteName(), ['productManagement', 'categoryManagement']) ? 'sidebar__item--active' : '' }}">
+                <a href="#" class="sidebar__link sidebar__link-dropdown">
+                    <i class="fas fa-boxes sidebar__icon"></i>
+                    <div class="sidebar__dropdowm-text">
+                        <span class="sidebar__text">Quản lý sản phẩm</span>
+                        <i class="fa-solid fa-chevron-down dropdown__icon"></i>
+                    </div>
+                </a>
+                <ul class="sidebar__submenu sidebar__submenu--hidden">
+                    <li class="sidebar__subitem"><a href="{{ route('productManagement') }}" class="sidebar__sublink">danh
+                            sách sản phẩm</a></li>
+                    <li class="sidebar__subitem"><a href="{{ route('categoryManagement') }}" class="sidebar__sublink">danh
+                            mục sản phảm</a></li>
+                </ul>
+            </li>
+            <li class="sidebar__item {{request()->routeIs('accountManagement') ? 'sidebar__item--active' : ''}}">
+                <a href="{{ route('accountManagement') }}" class="sidebar__link">
+                    <i class="fas fa-users sidebar__icon"></i>
+                    <span class="sidebar__text">Quản lý tài khoản</span>
+                </a>
+            </li>
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link sidebar__link-dropdown">
+                    <i class="fas fa-warehouse sidebar__icon"></i>
+                    <div class="sidebar__dropdowm-text">
+                        <span class="sidebar__text">Quản lý kho nguyên liệu</span>
+                        <i class="fa-solid fa-chevron-down dropdown__icon"></i>
+                    </div>
+                </a>
+                <ul class="sidebar__submenu sidebar__submenu--hidden">
+                    <li class="sidebar__subitem"><a href="{{ route('ingredients.index') }}" class="sidebar__sublink">danh
+                            sách nguyên liệu</a></li>
+                    <li class="sidebar__subitem"><a href="{{ route('supplier.index') }}" class="sidebar__sublink">Nhà cung
+                            cấp</a></li>
+                    <!-- <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">nhập nguyên liệu</a></li>
+                        <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">xuất nguyên liệu</a></li>
+                        <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">lịch sử nhập-xuất</a></li> -->
+                </ul>
+            </li>
+        @endif
         <li class="sidebar__item sidebar__item--logout">
             <a href="#" class="sidebar__link">
                 <i class="fas fa-sign-out-alt sidebar__icon"></i>
                 <span class="sidebar__text">Đăng xuất</span>
             </a>
+        </li>
+        <li class="account-area account-dropdown">
+            @auth
+                <button class="account-btn" type="button">
+                    <span class="account-name">{{ Auth::user()->name }}</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6" />
+                    </svg>
+                </button>
+                <ul class="account-menu">
+                    {{-- nếu muốn có trang hồ sơ riêng thì để link ở đây --}}
+                    <li><a href="{{ route('profile.edit') }}">Tài khoản</a></li>
+                    <li class="separator"></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="logout-btn">Đăng xuất</button>
+                        </form>
+                    </li>
+                </ul>
+            @else
+                <a href="{{ route('login') }}" class="account-link">Đăng nhập</a>
+                <a href="{{ route('register') }}" class="account-link">Đăng ký</a>
+            @endauth
         </li>
     </ul>
 </div>

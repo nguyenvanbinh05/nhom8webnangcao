@@ -36,7 +36,7 @@
                 <!-- Remember + Forgot -->
                 <div class="mb-4 flex items-center justify-between">
                     <label class="inline-flex items-center">
-                        <input type="checkbox" name="remember" class="mr-2"> Nhớ đăng nhập
+                        <input id="remember_me" type="checkbox" name="remember" class="mr-2"> Nhớ đăng nhập
                     </label>
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="link">Quên mật khẩu?</a>
