@@ -1,0 +1,492 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Kaushan+Script&family=Tapestry&display=swap");
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    width: 100%;
+}
+
+body {
+    font-size: 1.6rem;
+    font-family: "Be Vietnam Pro", sans-serif;
+    width: 100%;
+}
+/* common */
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+
+.main-content {
+    width: 1660px;
+    max-width: calc(100% - 48px);
+    margin-left: auto;
+    margin-right: auto;
+}
+.btn {
+    color: #fff;
+    text-align: center;
+    display: inline-block;
+    background-color: #ff8914;
+    border-radius: 999px;
+}
+/* ================= HEADER ================= */
+.header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #391b09;
+    border-bottom: 2px solid #ff8914;
+    z-index: 1000;
+}
+
+/* ====== cấu trúc tổng ====== */
+.header .body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    gap: 20px;
+}
+
+.shop-logo img {
+    max-width: 180px;
+    height: auto;
+    display: block;
+}
+
+/* ===== MENU ===== */
+.nav ul {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nav a {
+    color: #fff;
+    font-size: 2.6rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.nav a:hover,
+.nav a.active {
+    color: #ff8914;
+    text-shadow: 1px 0 0 currentColor;
+}
+
+/* ===== ACCOUNT ===== */
+.search-account ul {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.search-account li a {
+    color: #fff;
+    font-size: 1.6rem;
+    transition: color 0.3s ease;
+}
+.search-account li a:hover {
+    color: #ff8914;
+}
+.search-account ul li:last-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.search-account li img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+.search-account .login-logout {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    gap: 3px;
+    text-align: left;
+}
+.search-account .login-logout a {
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+.search-account small a {
+    font-size: 1.4rem;
+    opacity: 0.9;
+}
+
+/* ===== NÚT MENU DI ĐỘNG ===== */
+.menu-toggle {
+    display: none;
+    background-color: transparent;
+    color: #fff;
+    font-size: 3.2rem;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.menu-toggle:hover {
+    background-color: rgba(255, 137, 20, 0.2);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+    .nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(
+            135deg,
+            rgba(51, 32, 4, 0.295),
+            rgba(57, 27, 9, 1)
+        );
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.35s ease;
+    }
+    .nav.active {
+        display: block;
+        transform: translateY(0);
+        opacity: 1;
+    }
+    .nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px 40px;
+    }
+    .nav a {
+        font-size: 2rem;
+        padding: 6px 0;
+        width: 100%;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+    .header .body {
+        flex-wrap: nowrap;
+    }
+
+    .search-account ul {
+        gap: 10px;
+    }
+    .search-account li img {
+        width: 20px;
+        height: 20px;
+    }
+    .search-account li:last-child img {
+        display: none;
+    }
+    .search-account .login-logout a {
+        font-size: 1.4rem;
+    }
+    .search-account small a {
+        font-size: 1.2rem;
+    }
+    .header .shop-logo {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .header .body {
+        padding: 12px 0;
+        gap: 8px;
+    }
+    .shop-logo img {
+        max-width: 140px;
+    }
+    .menu-toggle {
+        font-size: 2.4rem;
+        padding: 4px 10px;
+    }
+    .search-account ul {
+        gap: 6px;
+    }
+    .search-account li img {
+        width: 22px;
+        height: 22px;
+    }
+    .search-account .login-logout a {
+        font-size: 1.2rem;
+    }
+    .search-account small a {
+        font-size: 1.1rem;
+    }
+}
+/* ================*/
+/* Bố cục chung khu icon bên phải (nếu cần) */
+.search-account ul {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* ==== DROPDOWN ACCOUNT ==== */
+.account-area {
+    position: relative;
+}
+
+/* Nút mở dropdown (ảnh + tên + mũi chevron) */
+.account-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 10px;
+    line-height: 1;
+}
+.account-btn:focus-visible {
+    outline: 2px solid #8aa7ff;
+    outline-offset: 2px;
+}
+.account-icon {
+    width: 22px;
+    height: 22px;
+    display: block;
+}
+.account-name {
+    font-weight: 600;
+    white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.chevron {
+    transition: transform 0.2s ease;
+    transform: translateY(1px) rotate(0deg);
+}
+
+/* Hộp menu */
+.account-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 220px;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+
+    /* Ẩn mặc định + hiệu ứng */
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.account-menu li {
+    margin: 0;
+}
+.account-menu li a,
+.account-menu .logout-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: #222;
+}
+.account-menu li a:hover,
+.account-menu .logout-btn:hover {
+    background: #f6f6f6;
+}
+.account-menu li a:focus-visible,
+.account-menu .logout-btn:focus-visible {
+    outline: 2px solid #8aa7ff;
+    outline-offset: 2px;
+}
+
+.account-menu .separator {
+    height: 1px;
+    background: #eee;
+    margin: 6px 0;
+}
+
+/* Mở dropdown: hover (desktop) + focus-within (click/tab: mobile + a11y) */
+.account-dropdown:hover > .account-menu,
+.account-dropdown:focus-within > .account-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.account-dropdown:hover > .account-btn .chevron,
+.account-dropdown:focus-within > .account-btn .chevron {
+    transform: translateY(1px) rotate(180deg);
+}
+
+/* Dark header (nếu header có nền tối gán .dark) */
+.header.dark .account-menu {
+    background: #1f1f1f;
+    border-color: #333;
+}
+.header.dark .account-menu li a,
+.header.dark .account-menu .logout-btn {
+    color: #fff;
+}
+.header.dark .account-menu li a:hover,
+.header.dark .account-menu .logout-btn:hover {
+    background: #2a2a2a;
+}
+
+/* Responsive: nếu màn nhỏ, menu rộng hơn một chút cho dễ bấm */
+@media (max-width: 768px) {
+    .account-menu {
+        min-width: 260px;
+    }
+}
+
+/* =========footer========== */
+footer {
+    background-color: #1c1613;
+    padding-top: 75px;
+}
+
+.footer .title {
+    color: #d28737;
+    font-size: 2.8rem;
+    font-weight: 500;
+    letter-spacing: 0.28px;
+}
+.footer .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer .row .column1 {
+    width: 30%;
+    min-width: 350px;
+}
+.footer .desc {
+    color: #fff;
+    text-align: justify;
+    max-width: 400px;
+    line-height: 1.5;
+    padding-top: 35px;
+}
+
+.footer .row .column2,
+.footer .row .column4 {
+    width: 18%;
+    min-width: 350px;
+}
+.footer .column2 ul li {
+    display: block;
+}
+.footer .column2 ul {
+    list-style: none;
+    margin: 30px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 12px;
+}
+.fooer .column2 ul a {
+    display: inline-block;
+    color: #fff;
+    letter-spacing: 1.28px;
+    margin: 0;
+}
+.footer .column4 ul {
+    display: flex;
+    gap: 20px;
+    min-width: 350px;
+}
+.footer .row .column3 {
+    width: 27%;
+}
+.footer .row .column3 a {
+    color: #a9a8a8;
+    font-weight: 300;
+    letter-spacing: 1.28px;
+}
+.footer strong {
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1.28px;
+}
+.footer ul {
+    margin-top: 30px;
+}
+.footer ul a {
+    color: #fff;
+    letter-spacing: 1.28px;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+.footer li:last-child a {
+    margin-bottom: 0;
+}
+
+.footer .copyright {
+    color: #a9a8a8;
+    letter-spacing: 1.28px;
+    margin-top: 145px;
+    padding-bottom: 15px;
+    text-align: center;
+}
+.footer a:hover {
+    color: #ff8914;
+    text-shadow: 1px 0 0 currentColor;
+}
+@media (max-width: 480px) {
+    .footer .column2 ul {
+        grid-template-columns: 1fr;
+    }
+}
+/* ======hiệu ứng xuất hiện trang========= */
+.fade-in {
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
