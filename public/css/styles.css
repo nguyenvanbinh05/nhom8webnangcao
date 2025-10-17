@@ -949,7 +949,7 @@ html {
     max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #f6f6f6;
+    color: #222;
 }
 .chevron {
     transition: transform 0.2s ease;
@@ -1031,7 +1031,7 @@ html {
 }
 .account-dropdown:hover > .account-btn .chevron,
 .account-dropdown:focus-within > .account-btn .chevron {
-    transform: translateY(1px) rotate(180deg);
+    transform: translateY(1px) rotate(-90deg);
 }
 
 /* Dark header (nếu header có nền tối gán .dark) */

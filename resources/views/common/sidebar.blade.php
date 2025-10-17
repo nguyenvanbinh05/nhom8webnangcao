@@ -59,17 +59,17 @@
                     <li class="sidebar__subitem"><a href="{{ route('supplier.index') }}" class="sidebar__sublink">Nhà cung
                             cấp</a></li>
                     <!-- <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">nhập nguyên liệu</a></li>
-                        <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">xuất nguyên liệu</a></li>
-                        <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">lịch sử nhập-xuất</a></li> -->
+                            <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">xuất nguyên liệu</a></li>
+                            <li class="sidebar__subitem"><a href="#" class="sidebar__sublink">lịch sử nhập-xuất</a></li> -->
                 </ul>
             </li>
         @endif
-        <li class="sidebar__item sidebar__item--logout">
+        {{-- <li class="sidebar__item sidebar__item--logout">
             <a href="#" class="sidebar__link">
                 <i class="fas fa-sign-out-alt sidebar__icon"></i>
                 <span class="sidebar__text">Đăng xuất</span>
             </a>
-        </li>
+        </li> --}}
         <li class="account-area account-dropdown">
             @auth
                 <button class="account-btn" type="button">
