@@ -10,11 +10,13 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $products = [
+            // Sản phẩm có size -> Price = null
             [
                 'NameProduct' => 'Cà phê sữa đá',
                 'MainImage' => 'images/products/san_pham.jpg',
                 'Description' => 'Cà phê phin truyền thống, kết hợp sữa đặc thơm béo.',
                 'CategoryId' => 1,
+                'Price' => null,
                 'Status' => 'Available',
             ],
             [
@@ -22,13 +24,7 @@ class ProductSeeder extends Seeder
                 'MainImage' => 'images/products/san_pham.jpg',
                 'Description' => 'Trà sữa béo ngậy, trân châu dai ngọt.',
                 'CategoryId' => 2,
-                'Status' => 'Available',
-            ],
-            [
-                'NameProduct' => 'Bánh Tiramisu',
-                'MainImage' => 'images/products/banhmi.svg',
-                'Description' => 'Bánh ngọt Ý, lớp kem béo nhẹ và cacao đậm vị.',
-                'CategoryId' => 3,
+                'Price' => null,
                 'Status' => 'Available',
             ],
             [
@@ -36,6 +32,16 @@ class ProductSeeder extends Seeder
                 'MainImage' => 'images/products/san_pham.jpg',
                 'Description' => 'Sinh tố làm từ bơ tươi, ngọt mát và bổ dưỡng.',
                 'CategoryId' => 4,
+                'Price' => null,
+                'Status' => 'Available',
+            ],
+            // Sản phẩm không size -> Price cố định
+            [
+                'NameProduct' => 'Bánh Tiramisu',
+                'MainImage' => 'images/products/san_pham.jpg',
+                'Description' => 'Bánh ngọt Ý, lớp kem béo nhẹ và cacao đậm vị.',
+                'CategoryId' => 3,
+                'Price' => 50000,
                 'Status' => 'Available',
             ],
             [
@@ -43,6 +49,7 @@ class ProductSeeder extends Seeder
                 'MainImage' => 'images/products/san_pham.jpg',
                 'Description' => 'Nước ép cam tươi nguyên chất, nhiều vitamin C.',
                 'CategoryId' => 5,
+                'Price' => 40000,
                 'Status' => 'Available',
             ],
         ];

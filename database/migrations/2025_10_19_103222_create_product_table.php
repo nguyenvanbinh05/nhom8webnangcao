@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('NameProduct', 100);
             $table->string('MainImage', 255);
             $table->text('Description')->nullable();
+            $table->decimal('Price', 10, 2)->nullable();
             $table->unsignedBigInteger('CategoryId');
             $table->foreign('CategoryId')->references('idCategory')->on('Category')->onDelete('restrict');
             $table->enum('Status', ['Available', 'Stopped'])->default('Available');
