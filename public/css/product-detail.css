@@ -9,7 +9,7 @@
 .product-body {
     display: flex;
     justify-content: center;
-    align-items: stretch; /* ✅ Đảm bảo hai bên cao bằng nhau */
+    align-items: stretch;
     gap: 60px;
     flex-wrap: wrap;
     max-width: 1200px;

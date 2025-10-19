@@ -28,14 +28,31 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = Auth::user();
-        if ($user->role === 'admin') {
-            return redirect('/admin');
-        } elseif ($user->role === 'staff') {
-            return redirect('/admin');
-        } else {
-            return redirect('/');
+        // $user = Auth::user();
+        // if ($user->role === 'admin') {
+        //     return redirect('/admin');
+        // } elseif ($user->role === 'staff') {
+        //     return redirect('/admin');
+        // } else {
+        //     return redirect('/');
+        // }
+        $user = $request->user();
+        if (! $user->hasVerifiedEmail()) {
+            // (Tuỳ chọn) gửi lại email xác minh mỗi lần user cố đăng nhập
+            $user->sendEmailVerificationNotification();
+
+            return redirect()
+                ->route('verification.notice')
+                ->with('status', 'Tài khoản của bạn chưa được xác minh. Chúng tôi vừa gửi lại email xác minh — vui lòng kiểm tra hộp thư và nhấp vào liên kết.');
         }
+
+        // Redirect theo vai trò của bạn
+        $user = $request->user();
+        return redirect()->intended(match ($user->role) {
+            'admin' => '/admin',
+            'staff' => '/admin',
+            default => '/',
+        });
     }
 
     /**

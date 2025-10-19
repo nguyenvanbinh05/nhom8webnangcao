@@ -47,6 +47,7 @@
                 <x-primary-button class="btn-primary w-full justify-center">
                     {{ __('Đăng nhập') }}
                 </x-primary-button>
+
             </form>
         </div>
     </section>

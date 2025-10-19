@@ -40,3 +40,10 @@ Route::get('/gio-hang', function () {
 Route::get('/thanhtoan', function () {
     return view('costumer.checkout');
 })->name('checkout');
+
+// routes/web.php
+use App\Http\Controllers\ContactController;
+
+Route::post('/contact/send', [ContactController::class, 'send'])
+    ->name('contact.send')
+    ->middleware('throttle:5,1');

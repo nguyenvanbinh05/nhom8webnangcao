@@ -538,6 +538,30 @@
 .btn-submit:hover {
     background-color: #ff9f3f;
 }
+.contact-form {
+    position: relative;
+}
+.contact-alert {
+    width: 100%;
+    margin: 0 0 12px 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    border: 1px solid transparent;
+    /* tránh làm cột cao đột biến khi lỗi dài */
+    word-wrap: break-word;
+}
+.contact-alert.is-success {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #10b981;
+}
+.contact-alert.is-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #ef4444;
+}
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
