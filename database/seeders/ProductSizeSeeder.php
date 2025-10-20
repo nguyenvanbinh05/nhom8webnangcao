@@ -22,6 +22,7 @@ class ProductSizeSeeder extends Seeder
             // Sinh tố bơ (idProduct = 4)
             ['Size' => 'M', 'Price' => 40000, 'ProductId' => 4],
             ['Size' => 'L', 'Price' => 45000, 'ProductId' => 4],
+
         ];
 
         foreach ($sizes as $size) {

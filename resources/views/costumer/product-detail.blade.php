@@ -1,100 +1,122 @@
 @extends('costumer.layouts.myapp')
-@section('title', 'Cà Phê Đen')
+@section('title', $product->NameProduct)
+
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/product-detail.css') }}">
 @endpush
+
 @section('content')
-    <section class="product-detail fade-in">
+    <section class="product-detail">
         <div class="main-content">
-            <div class="product-body">
-                <!-- Cột trái: hình ảnh sản phẩm -->
+
+            {{-- Breadcrumb đơn giản --}}
+            <nav class="breadcrumb">
+                <a href="{{ route('menu.index') }}">Menu</a>
+                <span>/</span>
+                <a href="{{ route('menu.byCategory', $product->CategoryId) }}">{{ $product->category->NameCategory }}</a>
+                <span>/</span>
+                <span>{{ $product->NameProduct }}</span>
+            </nav>
+
+            <div class="product-detail__grid">
+                {{-- Gallery --}}
                 <div class="product-gallery">
-                    <div class="main-image">
-                        <img src="{{ asset('images/products/capheden.svg') }}" alt="Cà phê đen" id="mainImage">
+                    <div class="product-gallery__main">
+                        <img src="{{ asset($product->MainImage ?: 'images/products/placeholder.svg') }}"
+                            alt="{{ $product->NameProduct }}">
                     </div>
-                    <div class="thumb-list">
-                        <img src="{{ asset('images/products/capheden.svg') }}" alt="thumb 1" class="active"
-                            onclick="changeImage(this)">
-                        <img src="{{ asset('images/products/sinhto.svg') }}" alt="thumb 2" onclick="changeImage(this)">
-                    </div>
+
+                    @if($product->additationImages->isNotEmpty())
+                        <div class="product-gallery__thumbs">
+                            @foreach($product->additationImages as $img)
+                                <img src="{{ asset($img->AdditationLink) }}" alt="Ảnh phụ">
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
 
-                <!-- Cột phải: thông tin sản phẩm -->
+                {{-- Info --}}
                 <div class="product-info">
-                    <h1 class="product-title">Cà phê đen</h1>
-                    <p class="product-status">Tình trạng: <span>Còn hàng</span></p>
+                    <h1 class="product-title">{{ $product->NameProduct }}</h1>
 
-                    <div class="product-price">
-                        <span class="price-current">55.000đ</span>
-                        <span class="price-old">60.000đ</span>
-                    </div>
+                    {{-- Giá mặc định = size nhỏ nhất (nếu có). Nếu Tiramisu dùng size mặc định M trong seed, vẫn hiện đúng.
+                    --}}
+                    {{-- Giá hiện tại (theo size đang chọn) --}}
+                    @php
+                        $sortedSizes = $product->sizes->sortBy('Price');
+                        $defaultSize = $sortedSizes->first(); // mặc định = size rẻ nhất
+                    @endphp
+                    <p class="product-price" id="pd-current-price">
+                        @if($defaultSize)
+                            {{ number_format($defaultSize->Price, 0, ',', '.') }}đ
+                        @endif
+                    </p>
 
-                    <div class="product-option">
-                        <p>Kích thước:</p>
-                        <div class="sizes">
-                            <button class="size active">S</button>
-                            <button class="size">M</button>
-                            <button class="size">L</button>
+                    {{-- Mô tả --}}
+                    @if($product->Description)
+                        <div class="product-desc">{!! nl2br(e($product->Description)) !!}</div>
+                    @endif
+
+                    {{-- Chọn size (nếu có nhiều) --}}
+                    @if($product->sizes->isNotEmpty())
+                        <div class="product-sizes" id="pd-sizes">
+                            <span>Kích thước:</span>
+                            <div class="size-list" id="pd-size-list">
+                                @foreach($sortedSizes as $sz)
+                                    {{--
+                                    Dùng button (hoặc label + input) tuỳ CSS của bạn.
+                                    Ở đây dùng button để đơn giản, có gán data-* để JS đọc.
+                                    --}}
+                                    <button type="button"
+                                        class="size-item {{ $defaultSize && $defaultSize->idProductSize === $sz->idProductSize ? 'active' : '' }}"
+                                        data-size="{{ $sz->Size }}" data-price="{{ $sz->Price }}">
+                                        {{ $sz->Size }}
+                                    </button>
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <div class="product-quantity">
-                        <label for="quantity">Số lượng:</label>
-                        <div class="quantity-box">
-                            <input id="quantity" type="number" value="1" min="1">
+                    {{-- Trạng thái --}}
+                    @if($product->Status === 'Stopped')
+                        <div class="product-status out">Hết hàng</div>
+                    @else
+                        <div class="product-actions">
+                            <button class="btn add-to-cart" data-product-id="{{ $product->idProduct }}">
+                                Thêm vào giỏ
+                            </button>
                         </div>
-                    </div>
-
-
-                    <div class="product-action">
-                        <button class="btn-buy">Mua ngay</button>
-                        <button class="btn-add">Thêm vào giỏ</button>
-                    </div>
+                    @endif
                 </div>
             </div>
 
-            <!-- Mô tả sản phẩm -->
-            <div class="product-description">
-                <h2>Mô tả sản phẩm</h2>
-                <p>
-                    Cà Phê Đen là lựa chọn hoàn hảo dành cho những ai yêu thích vị đắng đậm đà và hương thơm đặc trưng của
-                    hạt cà phê rang xay nguyên chất.
-                </p>
-            </div>
-            <!-- SẢN PHẨM CÙNG LOẠI -->
-            <section class="related-products">
-                <div class="title">
-                    <h2>Sản Phẩm Cùng Loại</h2>
-                </div>
-                <div class="main-content">
-                    <div class="related-list">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <div class="related-card">
-                                <div class="related-image">
-                                    <a href="#"><img src="{{ asset('images/products/capheden.svg') }}" alt="Cà Phê Đen"></a>
+            {{-- Sản phẩm liên quan --}}
+            @if($related->isNotEmpty())
+                <div class="related-products">
+                    <h2>Sản phẩm liên quan</h2>
+                    <div class="menu-products">
+                        @foreach($related as $rp)
+                            @php $rpMin = $rp->sizes->sortBy('Price')->first(); @endphp
+                            <a href="{{ route('product.show', $rp->idProduct) }}" class="menu-card">
+                                <div class="menu-card-img">
+                                    <img src="{{ asset($rp->MainImage ?: 'images/products/placeholder.svg') }}"
+                                        alt="{{ $rp->NameProduct }}">
                                 </div>
-                                <div class="related-info">
-                                    <a href="#" class="related-name">Cà phê Đen {{ $i }}</a>
-                                    <p class="related-price">55.000 đ</p>
+                                <div class="menu-card-info">
+                                    <p class="menu-card-name">{{ $rp->NameProduct }}</p>
+                                    @if($rpMin)
+                                        <p class="menu-card-price">{{ number_format($rpMin->Price, 0, ',', '.') }} đ</p>
+                                    @endif
                                 </div>
-                                <button class="related-cart-btn" title="Thêm vào giỏ hàng">
+                                <button class="menu-card-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $rp->idProduct }}">
                                     <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
                                 </button>
-                            </div>
-                        @endfor
+                            </a>
+                        @endforeach
                     </div>
                 </div>
-            </section>
-
+            @endif
 
         </div>
     </section>
-    <script>
-        function changeImage(element) {
-            document.getElementById('mainImage').src = element.src;
-            document.querySelectorAll('.thumb-list img').forEach(img => img.classList.remove('active'));
-            element.classList.add('active');
-        }
-    </script>
-
 @endsection

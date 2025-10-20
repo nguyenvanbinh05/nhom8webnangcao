@@ -9,7 +9,7 @@
                 <ul>
                     <li><a href="{{ route('home') }}">Trang chủ</a></li>
                     <li><a href="{{ url('/') }}#about">Giới thiệu</a></li>
-                    <li><a href="{{ route('menu') }}">Menu</a></li>
+                    <li><a href="{{ route('menu.index') }}">Menu</a></li>
                     <li><a href="{{ url('/') }}#contact">Liên hệ</a></li>
                 </ul>
             </nav>
