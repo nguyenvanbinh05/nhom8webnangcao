@@ -19,10 +19,9 @@ class ProductSizeSeeder extends Seeder
             ['Size' => 'M', 'Price' => 35000, 'ProductId' => 2],
             ['Size' => 'L', 'Price' => 40000, 'ProductId' => 2],
 
-            // Sinh tố bơ (idProduct = 4)
-            ['Size' => 'M', 'Price' => 40000, 'ProductId' => 4],
-            ['Size' => 'L', 'Price' => 45000, 'ProductId' => 4],
-
+            // Sinh tố bơ (idProduct = 3)
+            ['Size' => 'M', 'Price' => 40000, 'ProductId' => 3],
+            ['Size' => 'L', 'Price' => 45000, 'ProductId' => 3],
         ];
 
         foreach ($sizes as $size) {
