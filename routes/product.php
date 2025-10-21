@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AdminProductController;
 
 
-Route::resource('/product', ProductController::class);
+Route::resource('/product', AdminProductController::class);
