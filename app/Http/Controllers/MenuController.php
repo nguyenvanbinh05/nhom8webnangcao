@@ -29,7 +29,7 @@ class MenuController extends Controller
         // Nhóm theo tên danh mục khi ở "Tất cả"
         $grouped = $products->groupBy(fn($p) => optional($p->category)->NameCategory ?? 'Khác');
 
-        return view('costumer.menu', [
+        return view('customer.menu', [
             'categories' => $categories,
             'grouped'    => $grouped,
             'paginator'  => null,
@@ -61,7 +61,7 @@ class MenuController extends Controller
         $groupName = $active?->NameCategory ?? 'Danh mục';
         $grouped   = collect([$groupName => $products]);
 
-        return view('costumer.menu', [
+        return view('cutomer.menu', [
             'categories' => $categories,
             'grouped'    => $grouped,
             'paginator'  => null,

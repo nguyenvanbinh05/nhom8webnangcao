@@ -1,4 +1,4 @@
-@extends('costumer.layouts.myapp')
+@extends('customer.layouts.myapp')
 @section('title', 'Menu')
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/menu.css') }}">

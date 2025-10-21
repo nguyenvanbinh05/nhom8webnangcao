@@ -1,4 +1,4 @@
-@extends('costumer.layouts.myapp')
+@extends('customer.layouts.myapp')
 @section('title', 'Giỏ hàng')
 
 @push('styles')
@@ -71,7 +71,7 @@
         </div>
     </section>
 
-    @include('costumer.partials.popular-products')
+    @include('customer.partials.popular-products')
     <script>
         function csrf() {
             const m = document.querySelector('meta[name="csrf-token"]');
@@ -149,10 +149,10 @@
                         const container = document.querySelector('.cart-container');
                         if (container) {
                             container.outerHTML = `
-                    <div class="cart-empty">
-                      <p>🛒 Giỏ hàng trống</p>
-                      <a href="{{ route('menu.index') }}" class="checkout-btn">Mua ngay</a>
-                    </div>`;
+                        <div class="cart-empty">
+                          <p>🛒 Giỏ hàng trống</p>
+                          <a href="{{ route('menu.index') }}" class="checkout-btn">Mua ngay</a>
+                        </div>`;
                         }
                     }
                 } catch (err) {

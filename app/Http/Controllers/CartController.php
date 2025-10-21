@@ -35,7 +35,7 @@ class CartController extends Controller
         $items = $cart->items()->with('product')->get();
         $total = $items->sum(fn($it) => $it->price * $it->quantity);
 
-        return view('costumer.cart', compact('items', 'total'));
+        return view('customer.cart', compact('items', 'total'));
     }
 
     public function add(Request $request)

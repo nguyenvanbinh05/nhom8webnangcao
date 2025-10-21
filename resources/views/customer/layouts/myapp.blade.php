@@ -13,11 +13,11 @@
 </head>
 
 <body>
-    @include('costumer.partials.header')
+    @include('customer.partials.header')
     <div class="container">
         @yield('content')
     </div>
-    @include('costumer.partials.footer')
+    @include('customer.partials.footer')
     <script src="{{ asset('js/home.js') }}"></script>
 
 </body>

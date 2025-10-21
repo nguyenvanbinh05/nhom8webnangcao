@@ -1,4 +1,4 @@
-@extends('costumer.layouts.myapp')
+@extends('customer.layouts.myapp')
 @section('title', 'Cà Phê Đen')
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/product-detail.css') }}">

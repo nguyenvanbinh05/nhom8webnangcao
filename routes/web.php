@@ -17,11 +17,11 @@ Route::get('/', function () {
         } elseif ($user->role === 'staff') {
             return redirect('/admin');
         } else {
-            return view('costumer.home');
+            return view('customer.home');
         }
     }
 
-    return view('costumer.home');
+    return view('customer.home');
 })->name('home');
 
 // Route::get('/dashboard', function () {
@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-require __DIR__ . '/costumer.php';
+require __DIR__ . '/customer.php';
 
 
 Route::prefix('admin')->group(function () {

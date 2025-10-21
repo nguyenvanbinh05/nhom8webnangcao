@@ -54,7 +54,7 @@ Route::post('/cart/remove',   [CartController::class, 'remove'])->name('cart.rem
 // })->name('cart');
 
 Route::get('/thanhtoan', function () {
-    return view('costumer.checkout');
+    return view('customer.checkout');
 })->name('checkout');
 
 // routes/web.php

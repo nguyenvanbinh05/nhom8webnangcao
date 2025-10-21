@@ -20,7 +20,7 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        @include('costumer/partials.header')
+        @include('customer/partials.header')
 
         <!-- Page Heading -->
         {{-- @isset($header)

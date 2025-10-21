@@ -1,4 +1,4 @@
-@extends('costumer.layouts.myapp')
+@extends('customer.layouts.myapp')
 @section('title', 'Thanh toán')
 
 @push('styles')
