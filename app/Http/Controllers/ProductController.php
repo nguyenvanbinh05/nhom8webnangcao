@@ -35,7 +35,7 @@ class ProductController extends Controller
             ->take(5)
             ->get();
 
-        return view('costumer.product-detail', compact(
+        return view('customer.product-detail', compact(
             'product',
             'thumbs',
             'sizesSorted',

@@ -98,8 +98,7 @@
                                 <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card-link"
                                     aria-label="Xem chi tiết">
                                     <div class="menu-card-img">
-                                        <img src="{{ asset($product->MainImage ?: 'images/products/placeholder.svg') }}"
-                                            alt="{{ $product->NameProduct }}">
+                                        <img src="{{ asset('storage/' . $product->MainImage) }}" alt="{{ $product->NameProduct }}">
                                     </div>
 
                                     <div class="menu-card-info">

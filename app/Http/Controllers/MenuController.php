@@ -61,7 +61,7 @@ class MenuController extends Controller
         $groupName = $active?->NameCategory ?? 'Danh mục';
         $grouped   = collect([$groupName => $products]);
 
-        return view('cutomer.menu', [
+        return view('customer.menu', [
             'categories' => $categories,
             'grouped'    => $grouped,
             'paginator'  => null,
