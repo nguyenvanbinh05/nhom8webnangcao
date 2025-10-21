@@ -25,17 +25,33 @@ use Illuminate\Support\Facades\Route;
 //     })->name('checkout');
 // });
 
-Route::get('/menu', function () {
-    return view('costumer.menu');
-})->name('menu');
+// Route::get('/menu', function () {
+//     return view('costumer.menu');
+// })->name('menu');
 
-Route::get('/san-pham', function () {
-    return view('costumer.product-detail');
-})->name('product-detail');
+use App\Http\Controllers\MenuController;
 
-Route::get('/gio-hang', function () {
-    return view('costumer.cart');
-})->name('cart');
+Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+
+Route::get('/menu/category/{idCategory}', [MenuController::class, 'byCategory'])
+    ->whereNumber('idCategory')
+    ->name('menu.byCategory');
+
+// routes/web.php
+use App\Http\Controllers\CartController;
+
+Route::get('/cart',           [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add',      [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update',   [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove',   [CartController::class, 'remove'])->name('cart.remove');
+
+// Route::get('/san-pham', function () {
+//     return view('costumer.product-detail');
+// })->name('product-detail');
+
+// Route::get('/gio-hang', function () {
+//     return view('costumer.cart');
+// })->name('cart');
 
 Route::get('/thanhtoan', function () {
     return view('costumer.checkout');
@@ -47,3 +63,10 @@ use App\Http\Controllers\ContactController;
 Route::post('/contact/send', [ContactController::class, 'send'])
     ->name('contact.send')
     ->middleware('throttle:5,1');
+
+// routes/web.php
+use App\Http\Controllers\ProductController;
+
+Route::get('/product/{idProduct}', [ProductController::class, 'show'])
+    ->whereNumber('idProduct')
+    ->name('product.show');

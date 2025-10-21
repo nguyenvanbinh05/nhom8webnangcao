@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['admin', 'staff', 'costumer'])->default('costumer');
+        Schema::create('carts', function (Blueprint $table) {
+            $table->id('idCart');
+            $table->foreignId('user_id')->nullable()
+                ->constrained('users')->nullOnDelete();
+            $table->string('cart_token', 64)->unique()->nullable(); // cho khách
+            $table->timestamps();
         });
     }
 
@@ -21,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->dropColumn('role');
-        });
+        Schema::dropIfExists('carts');
     }
 };

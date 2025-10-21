@@ -8,7 +8,7 @@
                     Chỉ cần vài bước đặt hàng đơn giản, chúng tôi sẽ mang đến cho bạn ly cà phê thơm ngon,
                     đậm vị, được giao tận nơi để bạn thưởng thức bất cứ lúc nào.
                 </p>
-                <a href="{{ route('menu') }}" class="btn hero-btn">Khám phá ngay</a>
+                <a href="{{ route('menu.index') }}" class="btn hero-btn">Khám phá ngay</a>
             </div>
 
             <div class="hero-image">

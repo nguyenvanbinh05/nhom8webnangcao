@@ -62,3 +62,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const priceEl = document.getElementById("pd-current-price");
+    const sizeWrap = document.getElementById("pd-size-list");
+    if (!priceEl || !sizeWrap) return;
+
+    sizeWrap.addEventListener("click", function (e) {
+        const btn = e.target.closest(".size-item");
+        if (!btn) return;
+
+        // toggle active
+        sizeWrap
+            .querySelectorAll(".size-item.active")
+            .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // update price text
+        const raw = btn.dataset.price; // số nguyên
+        if (!raw) return;
+
+        const formatted = Number(raw).toLocaleString("vi-VN"); // 55.000
+        priceEl.textContent = formatted + "đ";
+
+        // (tùy chọn) nếu bạn cần lưu giá/size để gửi giỏ hàng sau này:
+        priceEl.dataset.currentPrice = raw;
+        priceEl.dataset.currentSize = btn.dataset.size;
+    });
+});
