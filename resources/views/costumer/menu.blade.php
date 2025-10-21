@@ -94,33 +94,35 @@
                     <h2>{{ $groupName }}</h2>
                     <div class="menu-products">
                         @forelse ($items as $product)
-                            <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card">
-                                <div class="menu-card-img">
-                                    <img src="{{ asset($product->MainImage ?: 'images/products/placeholder.svg') }}"
-                                        alt="{{ $product->NameProduct }}">
-                                </div>
+                            <div class="menu-card">
+                                <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card-link"
+                                    aria-label="Xem chi tiết">
+                                    <div class="menu-card-img">
+                                        <img src="{{ asset($product->MainImage ?: 'images/products/placeholder.svg') }}"
+                                            alt="{{ $product->NameProduct }}">
+                                    </div>
 
-                                <div class="menu-card-info">
-                                    <p class="menu-card-name">{{ $product->NameProduct }}</p>
+                                    <div class="menu-card-info">
+                                        <p class="menu-card-name">{{ $product->NameProduct }}</p>
 
-                                    @php
-                                        $minSize = $product->sizes->sortBy('Price')->first();
-                                    @endphp
+                                        @php
+                                            $minSize = $product->sizes->sortBy('Price')->first();
+                                        @endphp
+                                        @if($minSize)
+                                            <p class="menu-card-price">{{ number_format($minSize->Price, 0, ',', '.') }} đ</p>
+                                        @endif
 
-                                    @if($minSize)
-                                        <p class="menu-card-price">{{ number_format($minSize->Price, 0, ',', '.') }} đ</p>
-                                    @endif
-
-                                    @if($product->Status === 'Stopped')
-                                        <small class="badge badge-out">Hết hàng</small>
-                                    @endif
-                                </div>
+                                        @if($product->Status === 'Stopped')
+                                            <small class="badge badge-out">Hết hàng</small>
+                                        @endif
+                                    </div>
+                                </a>
 
                                 <button class="menu-card-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $product->idProduct }}"
                                     @if($product->Status === 'Stopped') disabled @endif>
                                     <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
                                 </button>
-                            </a>
+                            </div>
                         @empty
                             <p>Chưa có sản phẩm.</p>
                         @endforelse
@@ -130,11 +132,11 @@
                 <p>Không có dữ liệu.</p>
             @endforelse
 
-            @if ($paginator->hasPages())
-                <div class="menu-pagination">
-                    {{ $paginator->onEachSide(1)->links() }}
-                </div>
-            @endif
+            {{-- @if ($paginator->hasPages())
+            <div class="menu-pagination">
+                {{ $paginator->onEachSide(1)->links() }}
+            </div>
+            @endif --}}
         </div>
     </section>
 

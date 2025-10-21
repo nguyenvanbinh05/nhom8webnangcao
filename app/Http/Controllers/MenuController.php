@@ -21,19 +21,18 @@ class MenuController extends Controller
             'sizes:idProductSize,Size,Price,ProductId',
             'additationImages:idAdditationImage,AdditationLink,ProductId',
         ])
+            ->where('Status', '!=', 'Stopped')
             ->when($search, fn($q) => $q->where('NameProduct', 'like', "%{$search}%"))
             ->orderBy('NameProduct')
-            ->paginate(12)
-            ->withQueryString();
+            ->get();
 
         // Nhóm theo tên danh mục khi ở "Tất cả"
-        $grouped = $products->getCollection()
-            ->groupBy(fn($p) => optional($p->category)->NameCategory ?? 'Khác');
+        $grouped = $products->groupBy(fn($p) => optional($p->category)->NameCategory ?? 'Khác');
 
         return view('costumer.menu', [
             'categories' => $categories,
             'grouped'    => $grouped,
-            'paginator'  => $products,
+            'paginator'  => null,
             'activeId'   => null,
             'search'     => $search,
         ]);
@@ -54,18 +53,18 @@ class MenuController extends Controller
             'additationImages:idAdditationImage,AdditationLink,ProductId',
         ])
             ->where('CategoryId', $idCategory)
+            ->where('Status', '!=', 'Stopped')
             ->when($search, fn($q) => $q->where('NameProduct', 'like', "%{$search}%"))
             ->orderBy('NameProduct')
-            ->paginate(12)
-            ->withQueryString();
+            ->get();
 
         $groupName = $active?->NameCategory ?? 'Danh mục';
-        $grouped = collect([$groupName => $products->getCollection()]);
+        $grouped   = collect([$groupName => $products]);
 
         return view('costumer.menu', [
             'categories' => $categories,
             'grouped'    => $grouped,
-            'paginator'  => $products,
+            'paginator'  => null,
             'activeId'   => $idCategory,
             'search'     => $search,
         ]);

@@ -37,14 +37,21 @@ Route::get('/menu/category/{idCategory}', [MenuController::class, 'byCategory'])
     ->whereNumber('idCategory')
     ->name('menu.byCategory');
 
+// routes/web.php
+use App\Http\Controllers\CartController;
+
+Route::get('/cart',           [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add',      [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update',   [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove',   [CartController::class, 'remove'])->name('cart.remove');
 
 // Route::get('/san-pham', function () {
 //     return view('costumer.product-detail');
 // })->name('product-detail');
 
-Route::get('/gio-hang', function () {
-    return view('costumer.cart');
-})->name('cart');
+// Route::get('/gio-hang', function () {
+//     return view('costumer.cart');
+// })->name('cart');
 
 Route::get('/thanhtoan', function () {
     return view('costumer.checkout');

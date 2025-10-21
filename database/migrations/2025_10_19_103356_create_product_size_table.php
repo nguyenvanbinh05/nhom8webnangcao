@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('Product_Size', function (Blueprint $table) {
             $table->id('idProductSize');
-            $table->enum('Size', ['S', 'M', 'L']);
+            $table->enum('Size', ['S', 'M', 'L'])->nullable()->default(null);
             $table->decimal('Price', 10, 2);
             $table->unsignedBigInteger('ProductId');
             $table->foreign('ProductId')->references('idProduct')->on('Product')->onDelete('cascade');

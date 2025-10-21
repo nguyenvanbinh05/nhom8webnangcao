@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -13,21 +12,36 @@ class ProductController extends Controller
             'category:idCategory,NameCategory',
             'sizes:idProductSize,Size,Price,ProductId',
             'additationImages:idAdditationImage,AdditationLink,ProductId',
-        ])
-            ->where('idProduct', $idProduct)
-            ->firstOrFail();
+        ])->where('idProduct', $idProduct)->firstOrFail();
 
-        // size nhỏ nhất (hoặc null nếu không có size)
-        $minSize = $product->sizes->sortBy('Price')->first();
+        // Ảnh: ảnh chính + ảnh phụ (theo đúng thứ tự bạn muốn)
+        $thumbs = collect()
+            ->when($product->MainImage, fn($c) => $c->push($product->MainImage))
+            ->merge($product->additationImages->pluck('AdditationLink'))
+            ->values();
 
-        // gợi ý sản phẩm cùng danh mục (trừ chính nó)
+        // Size: mặc định = giá nhỏ nhất
+        $sizesSorted  = $product->sizes->sortBy('Price')->values();
+        $defaultSize  = $sizesSorted->first();               // có thể là size NULL nếu bạn seed kiểu không-size
+        $hasLabeled   = $product->sizes->whereNotNull('Size')->isNotEmpty(); // chỉ hiện khu chọn size khi có S/M/L
+        $currentPrice = $defaultSize?->Price;
+
+        // Sản phẩm liên quan (tuỳ chọn)
         $related = Product::with('sizes:idProductSize,Size,Price,ProductId')
             ->where('CategoryId', $product->CategoryId)
             ->where('idProduct', '!=', $product->idProduct)
+            ->where('Status', '!=', 'Stopped')
             ->orderBy('NameProduct')
-            ->take(8)
+            ->take(5)
             ->get();
 
-        return view('costumer.product-detail', compact('product', 'minSize', 'related'));
+        return view('costumer.product-detail', compact(
+            'product',
+            'thumbs',
+            'sizesSorted',
+            'hasLabeled',
+            'currentPrice',
+            'related'
+        ));
     }
 }

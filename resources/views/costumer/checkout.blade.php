@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="actions">
-                    <a class="btn-outline" href="/gio-hang">
+                    <a class="btn-outline" href="{{ route('cart.index') }}">
                         < Giỏ hàng</a>
                             <button class="btn-primary" type="submit">Thanh toán</button>
                 </div>

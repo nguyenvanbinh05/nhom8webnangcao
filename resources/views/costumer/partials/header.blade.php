@@ -17,7 +17,7 @@
             <div class="search-account">
                 <ul>
                     <li><a href="#"><img src="{{ asset('images/icons/search.svg') }}" alt="Tìm kiếm"></a></li>
-                    <li><a href="{{ route('cart') }}"><img src="{{ asset('images/icons/cart.svg') }}"
+                    <li><a href="{{ route('cart.index') }}"><img src="{{ asset('images/icons/cart.svg') }}"
                                 alt="Giỏ Hàng"></a></li>
 
                     {{-- Chọn 1 trong 2 khối dưới: (Cách 1) hoặc (Cách 2) --}}
