@@ -33,14 +33,14 @@
                     </div>
                 </a>
                 <ul class="sidebar__submenu sidebar__submenu--hidden">
-                    <li class="sidebar__subitem"><a href="{{ route('productManagement') }}" class="sidebar__sublink">danh
+                    <li class="sidebar__subitem"><a href="{{ route('product.index') }}" class="sidebar__sublink">danh
                             sách sản phẩm</a></li>
-                    <li class="sidebar__subitem"><a href="{{ route('categoryManagement') }}" class="sidebar__sublink">danh
+                    <li class="sidebar__subitem"><a href="{{ route('category.index') }}" class="sidebar__sublink">danh
                             mục sản phảm</a></li>
                 </ul>
             </li>
-            <li class="sidebar__item {{request()->routeIs('accountManagement') ? 'sidebar__item--active' : ''}}">
-                <a href="{{ route('accountManagement') }}" class="sidebar__link">
+            <li class="sidebar__item {{request()->routeIs('accounts.*') ? 'sidebar__item--active' : ''}}">
+                <a href="{{ route('accounts.index') }}" class="sidebar__link">
                     <i class="fas fa-users sidebar__icon"></i>
                     <span class="sidebar__text">Quản lý tài khoản</span>
                 </a>
@@ -79,7 +79,6 @@
                     </svg>
                 </button>
                 <ul class="account-menu">
-                    {{-- nếu muốn có trang hồ sơ riêng thì để link ở đây --}}
                     <li><a href="{{ route('profile.edit') }}">Tài khoản</a></li>
                     <li class="separator"></li>
                     <li>

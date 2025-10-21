@@ -49,7 +49,7 @@ class ProductSeeder extends Seeder
                 'MainImage' => 'images/products/san_pham.jpg',
                 'Description' => 'Nước ép cam tươi nguyên chất, nhiều vitamin C.',
                 'CategoryId' => 5,
-                'Price' => 40000,
+                'Price' => 30000,
                 'Status' => 'Available',
             ],
         ];

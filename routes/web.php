@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\IngredientController;
+
 
 
 Route::get('/', function () {
@@ -37,19 +37,20 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 require __DIR__ . '/costumer.php';
 
+
 Route::prefix('admin')->group(function () {
 
     Route::middleware(['auth', 'role:admin,staff'])->group(function () {
         Route::get('/', [PageController::class, 'homePage'])->name('homePage');
         Route::get('/product-management', [PageController::class, 'productManagement'])->name('productManagement');
         Route::get('/point-of-sale', [PageController::class, 'pos'])->name('pos');
-        Route::get('/product-management/add', [PageController::class, 'productAdd'])->name('productAdd');
     });
 
     Route::middleware(['auth', 'role:admin'])->group(function () {
-        Route::get('/account-management', [PageController::class, 'accountManagement'])->name('accountManagement');
-        Route::get('/category-management', [PageController::class, 'categoryManagement'])->name('categoryManagement');
-        Route::resource('/supplier', SupplierController::class);
-        Route::resource('/ingredients', IngredientController::class);
+        route::resource('/accounts', AccountController::class);
+        require __DIR__ . '/supplier.php';
+        require __DIR__ . '/ingredient.php';
+        require __DIR__ . '/product.php';
+        require __DIR__ . '/category.php';
     });
 });

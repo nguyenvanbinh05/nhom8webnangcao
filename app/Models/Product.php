@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $table = 'Product';
     protected $primaryKey = 'idProduct';
-    protected $fillable = ['NameProduct', 'MainImage', 'Description', 'CategoryId', 'Status'];
+    protected $fillable = ['NameProduct', 'MainImage', 'Description', "Price", 'CategoryId', 'Status'];
 
     public function category()
     {

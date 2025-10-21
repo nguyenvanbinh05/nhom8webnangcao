@@ -13,7 +13,7 @@ class Category extends Model
     protected $primaryKey = 'idCategory'; 
 
     protected $fillable = [
-        'NameCategory',
+        'NameCategory', 'description', 'Status'
     ];
 
     // Quan hệ 1-n với Product

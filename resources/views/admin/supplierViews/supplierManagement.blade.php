@@ -59,7 +59,7 @@
     </table>
 </div>
 
-@include('admin.supplierAdd')
-@include('admin.supplierEdit')
+@include('admin.supplierViews.supplierAdd')
+@include('admin.supplierViews.supplierEdit')
 
 @endsection

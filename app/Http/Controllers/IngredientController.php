@@ -14,7 +14,7 @@ class IngredientController extends Controller
     public function index()
     {
         $ingredients = Ingredient::with('supplier')->get();
-        return view('admin.ingredientManagement', compact('ingredients'));
+        return view('admin.ingredientViews.ingredientManagement', compact('ingredients'));
     }
 
     /**

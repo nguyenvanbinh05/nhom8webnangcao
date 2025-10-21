@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('Category', function (Blueprint $table) {
             $table->id('idCategory');
             $table->string('NameCategory');
+            $table->text('Description')->nullable();
+            $table->enum('Status', ['Available', 'Stopped'])->default('Available');
             $table->timestamps();
         });
     }

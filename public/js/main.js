@@ -4,17 +4,17 @@ const sidebarSubmenuAll = document.querySelectorAll(".sidebar__submenu--hidden")
 
 if (sidebarItemDropdown.length > 0) {
     sidebarItemDropdown.forEach(item => {
-        item.addEventListener("click", function(e){
+        item.addEventListener("click", function (e) {
             e.preventDefault();
 
             sidebarSubmenuAll.forEach(submenu => {
-                if(submenu !== this.parentElement.querySelector(".sidebar__submenu--hidden")){
+                if (submenu !== this.parentElement.querySelector(".sidebar__submenu--hidden")) {
                     submenu.classList.remove('dropdown-active');
                 }
             });
 
             const sidebarSubmenu = this.parentElement.querySelector(".sidebar__submenu--hidden");
-            if(sidebarSubmenu){
+            if (sidebarSubmenu) {
                 sidebarSubmenu.classList.toggle('dropdown-active');
             }
         });
@@ -28,9 +28,10 @@ const buttonEditForm = document.querySelectorAll(".buttonEditForm");
 const formInput = document.querySelector(".formInput");
 const formUpdate = document.querySelector(".formUpdate");
 const btnCloseForm = document.querySelectorAll(".btnCloseForm");
+const formUpdateCategory = document.getElementById('categoryupdateForm');
 
 if (buttonAddForm && formInput) {
-    buttonAddForm.addEventListener("click", function(e){
+    buttonAddForm.addEventListener("click", function (e) {
         e.preventDefault();
         formInput.classList.add('active');
     });
@@ -38,21 +39,21 @@ if (buttonAddForm && formInput) {
 
 if (buttonEditForm.length > 0 && formUpdate) {
     buttonEditForm.forEach(btn => {
-        btn.addEventListener("click", function(e){
+        btn.addEventListener("click", function (e) {
             e.preventDefault();
-            const row = btn.closest("tr");
-            const name = row.querySelector(".name")?.textContent || "";
-            const email = row.querySelector(".email")?.textContent || "";
-            const phone = row.querySelector(".phone")?.textContent || "";
-            const address = row.querySelector(".address")?.textContent || "";
-            const note = row.querySelector(".note")?.textContent || "";
+            const id = this.dataset.id; // data-id="{{ $category->idCategory }}"
+            const name = this.dataset.name; // data-name="{{ $category->NameCategory }}"
+            const desc = this.dataset.desc; // data-desc="{{ $category->description }}"
+            const status = this.dataset.status; // data-status="{{ $category->Status }}"
 
-            document.getElementById("editname").value = name;
-            document.getElementById("editphone").value = phone;
-            document.getElementById("editemail").value = email;
-            document.getElementById("editaddress").value = address;
-            document.getElementById("editnote").value = note;
+            // Điền dữ liệu vào form
+            document.getElementById('editNameCategory').value = name;
+            document.getElementById('editdescription').value = desc;
+            document.getElementById('editstatus').value = status;
 
+            formUpdateCategory.action = routeUpdateTemplate.replace(':id', id);
+
+            // Hiển thị form
             formUpdate.classList.add("active");
         });
     });
@@ -60,7 +61,7 @@ if (buttonEditForm.length > 0 && formUpdate) {
 
 if (btnCloseForm.length > 0) {
     btnCloseForm.forEach(btn => {
-        btn.addEventListener("click", function(e){
+        btn.addEventListener("click", function (e) {
             e.preventDefault();
             formInput?.classList.remove("active");
             formUpdate?.classList.remove("active");
@@ -111,6 +112,6 @@ if (additionalImagesInput && additionalImagesPreview && additionalAction) {
             };
             reader.readAsDataURL(file);
         });
-        additionalImagesInput.value = "";
+        // additionalImagesInput.value = "";
     });
 }
