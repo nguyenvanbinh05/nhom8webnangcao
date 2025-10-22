@@ -8,6 +8,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Cookie;
+use App\Models\Cart;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -18,6 +21,44 @@ class AuthenticatedSessionController extends Controller
     {
         return view('auth.login');
     }
+    protected function mergeGuestCart(Request $request, $user): void
+    {
+        $token = $request->cookie('cart_token');
+        if (!$token) return;
+
+        $guest = Cart::with('items')->where('cart_token', $token)->first();
+        if (!$guest || $guest->items->isEmpty()) {
+            Cookie::queue(Cookie::forget('cart_token'));
+            return;
+        }
+
+        // lấy/ tạo giỏ của user
+        $userCart = Cart::with('items')->firstOrCreate(['user_id' => $user->id]);
+
+        DB::transaction(function () use ($guest, $userCart) {
+            $toId = $userCart->getKey(); // idCart
+            foreach ($guest->items as $g) {
+                $target = $userCart->items()
+                    ->where('product_id', $g->product_id)
+                    ->where('size', $g->size)
+                    ->first();
+
+                if ($target) {
+                    $target->increment('quantity', $g->quantity);
+                    $g->delete();
+                } else {
+                    $g->cart_id = $toId; // CHỦ MỚI = carts.idCart
+                    $g->save();
+                }
+            }
+            $guest->refresh();
+            if ($guest->items()->count() === 0) {
+                $guest->delete();
+            }
+        });
+
+        Cookie::queue(Cookie::forget('cart_token'));
+    }
 
     /**
      * Handle an incoming authentication request.
@@ -25,33 +66,26 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        // $user = Auth::user();
-        // if ($user->role === 'admin') {
-        //     return redirect('/admin');
-        // } elseif ($user->role === 'staff') {
-        //     return redirect('/admin');
-        // } else {
-        //     return redirect('/');
-        // }
         $user = $request->user();
-        if (! $user->hasVerifiedEmail()) {
-            // (Tuỳ chọn) gửi lại email xác minh mỗi lần user cố đăng nhập
-            $user->sendEmailVerificationNotification();
 
+        // (Breeze chuẩn) bắt buộc verify email: KHÔNG logout, chuyển tới trang verify
+        if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail()) {
+            // gửi luôn email 1 lần
+            $user->sendEmailVerificationNotification();
             return redirect()
                 ->route('verification.notice')
-                ->with('status', 'Tài khoản của bạn chưa được xác minh. Chúng tôi vừa gửi lại email xác minh — vui lòng kiểm tra hộp thư và nhấp vào liên kết.');
+                ->with('status', 'verification-link-sent');
         }
 
-        // Redirect theo vai trò của bạn
-        $user = $request->user();
+        // GỘP giỏ hàng khách -> giỏ hàng user (nếu có cookie)
+        $this->mergeGuestCart($request, $user);
+
+        // Redirect theo vai trò
         return redirect()->intended(match ($user->role) {
-            'admin' => '/admin',
-            'staff' => '/admin',
-            default => '/',
+            'admin', 'staff' => '/admin',
+            default          => '/',
         });
     }
 

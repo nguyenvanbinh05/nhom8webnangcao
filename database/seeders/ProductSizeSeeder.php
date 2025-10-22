@@ -3,30 +3,29 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Product;
 use App\Models\ProductSize;
 
 class ProductSizeSeeder extends Seeder
 {
     public function run(): void
     {
-        $sizes = [
-            // Cà phê sữa đá (idProduct = 1)
-            ['Size' => 'S', 'Price' => 25000, 'ProductId' => 1],
-            ['Size' => 'M', 'Price' => 30000, 'ProductId' => 1],
-            ['Size' => 'L', 'Price' => 35000, 'ProductId' => 1],
+        // Lấy tất cả sản phẩm cần size: hoặc theo category, hoặc theo Price=null
+        $products = Product::whereNull('Price') // coi như có size
+            ->get(['idProduct', 'NameProduct']);
 
-            // Trà sữa trân châu (idProduct = 2)
-            ['Size' => 'M', 'Price' => 35000, 'ProductId' => 2],
-            ['Size' => 'L', 'Price' => 40000, 'ProductId' => 2],
-
-            // Sinh tố bơ (idProduct = 3)
-            ['Size' => 'M', 'Price' => 40000, 'ProductId' => 3],
-            ['Size' => 'L', 'Price' => 45000, 'ProductId' => 3],
-
-        ];
-
-        foreach ($sizes as $size) {
-            ProductSize::create($size);
+        foreach ($products as $p) {
+            // Không tạo trùng
+            $ensure = function (string $size, int $price) use ($p) {
+                ProductSize::firstOrCreate(
+                    ['ProductId' => $p->idProduct, 'Size' => $size],
+                    ['Price' => $price, 'created_at' => now(), 'updated_at' => now()]
+                );
+            };
+            // Giá ví dụ (tuỳ chỉnh)
+            $ensure('S', 25000);
+            $ensure('M', 30000);
+            $ensure('L', 35000);
         }
     }
 }

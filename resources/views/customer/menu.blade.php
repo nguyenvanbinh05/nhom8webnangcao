@@ -1,8 +1,10 @@
 @extends('customer.layouts.myapp')
 @section('title', 'Menu')
+
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
 @endpush
+
 @section('content')
     <section class="menu-section fade-in">
         <div class="main-content menu-container">
@@ -15,7 +17,9 @@
                 </form>
 
                 <ul>
-                    <li><a href="{{ route('menu.index') }}" class="{{ $activeId ? '' : 'active' }}">Tất cả</a></li>
+                    <li>
+                        <a href="{{ route('menu.index') }}" class="{{ $activeId ? '' : 'active' }}">Tất cả</a>
+                    </li>
                     @foreach ($categories as $cat)
                         <li>
                             <a href="{{ route('menu.byCategory', $cat->idCategory) }}"
@@ -28,115 +32,74 @@
             </div>
 
             <!-- Nội dung -->
-            <div class="menu-content">
-                {{-- <div class="menu-group">
-                    <h2>Cà phê</h2>
-                    <div class="menu-products">
-                        @foreach (range(1, 7) as $i)
-                        <a href="#" class="menu-card">
-                            <div class="menu-card-img">
-                                <img src="{{ asset('images/products/capheden.svg') }}" alt="Cà Phê Đen">
-                            </div>
-                            <div class="menu-card-info">
-                                <p class="menu-card-name">Cà phê Đen {{ $i }}</p>
-                                <p class="menu-card-price">55.000 đ</p>
-                            </div>
-                            <button class="menu-card-cart" title="Thêm vào giỏ hàng">
-                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
-                            </button>
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
+            <div class="menu-content" id="menu-content">
+                @forelse ($grouped as $groupName => $items)
+                    <div class="menu-group">
+                        <h2>{{ $groupName }}</h2>
+                        <div class="menu-products">
+                            @forelse ($items as $product)
+                                @php
+                                    // Có ít nhất một bản ghi Size != null?
+                                    $hasLabeled = $product->sizes->whereNotNull('Size')->isNotEmpty();
+                                    // Giá nhỏ nhất từ bảng product_sizes (nếu có)
+                                    $minSize = $product->sizes->sortBy('Price')->first();
+                                    // Fallback: nếu không có bản ghi size thì dùng cột Product.Price
+                                    $displayPrice = $minSize->Price ?? $product->Price;
+                                @endphp
 
+                                <div class="menu-card">
+                                    <!-- Thân thẻ (link sang chi tiết) -->
+                                    <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card-link"
+                                        aria-label="Xem chi tiết">
+                                        <div class="menu-card-img">
+                                            <img src="{{ asset('storage/' . $product->MainImage) }}"
+                                                alt="{{ $product->NameProduct }}">
+                                        </div>
 
-                <div class="menu-group">
-                    <h2>Sinh Tố</h2>
-                    <div class="menu-products">
-                        <a href="#" class="menu-card">
-                            <div class="menu-card-img">
-                                <img src="{{ asset('images/products/sinhto.svg') }}" alt="Sinh tố Matcha">
-                            </div>
-                            <div class="menu-card-info">
-                                <p class="menu-card-name">Sinh tố Matcha</p>
-                                <p class="menu-card-price">50.000 đ</p>
-                            </div>
-                            <button class="menu-card-cart" title="Thêm vào giỏ hàng">
-                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
-                            </button>
-                        </a>
-                    </div>
-                </div>
+                                        <div class="menu-card-info">
+                                            <p class="menu-card-name">{{ $product->NameProduct }}</p>
 
+                                            @if(!is_null($displayPrice))
+                                                <p class="menu-card-price">
+                                                    {{ number_format($displayPrice, 0, ',', '.') }} đ
+                                                </p>
+                                            @endif
 
-                <div class="menu-group">
-                    <h2>Bánh</h2>
-                    <div class="menu-products">
-                        @foreach (range(1, 4) as $i)
-                        <a href="#" class="menu-card">
-                            <div class="menu-card-img">
-                                <img src="{{ asset('images/products/banhmi.svg') }}" alt="Bánh Mì">
-                            </div>
-                            <div class="menu-card-info">
-                                <p class="menu-card-name">Bánh Mì {{ $i }}</p>
-                                <p class="menu-card-price">60.000 đ</p>
-                            </div>
-                            <button class="menu-card-cart" title="Thêm vào giỏ hàng">
-                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
-                            </button>
-                        </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div> --}}
-            @forelse ($grouped as $groupName => $items)
-                <div class="menu-group">
-                    <h2>{{ $groupName }}</h2>
-                    <div class="menu-products">
-                        @forelse ($items as $product)
-                            <div class="menu-card">
-                                <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card-link"
-                                    aria-label="Xem chi tiết">
-                                    <div class="menu-card-img">
-                                        <img src="{{ asset('storage/' . $product->MainImage) }}" alt="{{ $product->NameProduct }}">
-                                    </div>
+                                            @if($product->Status === 'Stopped')
+                                                <small class="badge badge-out">Hết hàng</small>
+                                            @endif
+                                        </div>
+                                    </a>
 
-                                    <div class="menu-card-info">
-                                        <p class="menu-card-name">{{ $product->NameProduct }}</p>
-
-                                        @php
-                                            $minSize = $product->sizes->sortBy('Price')->first();
-                                        @endphp
-                                        @if($minSize)
-                                            <p class="menu-card-price">{{ number_format($minSize->Price, 0, ',', '.') }} đ</p>
+                                    <!-- Nút giỏ hàng -->
+                                    @if($product->Status !== 'Stopped')
+                                        @if(!$hasLabeled)
+                                            {{-- KHÔNG có size: thêm vào giỏ bằng AJAX --}}
+                                            <button class="menu-card-cart" title="Thêm vào giỏ hàng" type="button"
+                                                data-product-id="{{ $product->idProduct }}">
+                                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
+                                            </button>
+                                        @else
+                                            {{-- CÓ size: đi đến trang chi tiết để chọn size --}}
+                                            <a class="menu-card-cart" title="Chọn size"
+                                                href="{{ route('product.show', $product->idProduct) }}">
+                                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Chọn size">
+                                            </a>
                                         @endif
-
-                                        @if($product->Status === 'Stopped')
-                                            <small class="badge badge-out">Hết hàng</small>
-                                        @endif
-                                    </div>
-                                </a>
-
-                                <button class="menu-card-cart" title="Thêm vào giỏ hàng" data-product-id="{{ $product->idProduct }}"
-                                    @if($product->Status === 'Stopped') disabled @endif>
-                                    <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
-                                </button>
-                            </div>
-                        @empty
-                            <p>Chưa có sản phẩm.</p>
-                        @endforelse
+                                    @endif
+                                </div>
+                            @empty
+                                <p>Chưa có sản phẩm.</p>
+                            @endforelse
+                        </div>
                     </div>
-                </div>
-            @empty
-                <p>Không có dữ liệu.</p>
-            @endforelse
-
-            {{-- @if ($paginator->hasPages())
-            <div class="menu-pagination">
-                {{ $paginator->onEachSide(1)->links() }}
+                @empty
+                    <p>Không có dữ liệu.</p>
+                @endforelse
             </div>
-            @endif --}}
         </div>
     </section>
-
+    @push('scripts')
+        <script src="{{ asset('js/menu.js') }}"></script>
+    @endpush
 @endsection

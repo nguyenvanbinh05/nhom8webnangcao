@@ -18,8 +18,15 @@
         @yield('content')
     </div>
     @include('customer.partials.footer')
-    <script src="{{ asset('js/home.js') }}"></script>
+    @include('customer.partials.cart-toast')
 
+    <script src="{{ asset('js/home.js') }}"></script>
+    <script>
+        window.CART_ADD_URL = "{{ route('cart.add') }}";
+        window.ASSET_BASE = "{{ asset('') }}";
+    </script>
+    <script src="{{ asset('js/cart-ajax.js') }}"></script>
+    @stack('scripts')
 </body>
 
 

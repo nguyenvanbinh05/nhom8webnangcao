@@ -9,14 +9,16 @@
             <div class="product-body">
                 <!-- Cột trái: hình ảnh sản phẩm -->
                 <div class="product-gallery">
+                    @php $first = $thumbs->first(); @endphp
                     <div class="main-image">
-                        <img id="pd-main-image" src="{{ asset($thumbs->first() ?? 'images/products/placeholder.svg') }}"
-                            alt="{{ $product->NameProduct }}">
+                        @if($first)
+                            <img id="pd-main-image" src="{{ asset('storage/' . $first) }}" alt="{{ $product->NameProduct }}">
+                        @endif
                     </div>
                     <div class="thumb-list" id="pd-thumbs">
                         @foreach($thumbs as $i => $src)
-                            <img class="{{ $i === 0 ? 'active' : '' }}" src="{{ asset($src) }}" data-src="{{ asset($src) }}"
-                                alt="thumb-{{ $i + 1 }}">
+                            <img class="{{ $i === 0 ? 'active' : '' }}" src="{{ asset('storage/' . $src) }}"
+                                data-src="{{ asset('storage/' . $src) }}" alt="thumb-{{ $i + 1 }}">
                         @endforeach
                     </div>
                 </div>
@@ -35,7 +37,6 @@
                             @if($currentPrice) {{ number_format($currentPrice, 0, ',', '.') }}đ
                             @endif
                         </span>
-                        <span class="price-old">60.000đ</span>
                     </div>
 
                     @if($hasLabeled)
@@ -92,9 +93,10 @@
                         <div class="related-list">
                             @foreach ($related as $rp)
                                 @php
-                                    $img = $rp->MainImage ?: 'images/products/placeholder.svg';
+                                    $img = $rp->MainImage ? ('storage/' . $rp->MainImage) : 'images/products/placeholder.svg';
                                     $rpMin = $rp->sizes->sortBy('Price')->first(); // giá nhỏ nhất (kể cả size NULL)
-                                @endphp
+                                    $hasLabeled = $rp->sizes->whereNotNull('Size')->isNotEmpty();
+                                  @endphp
 
                                 <div class="related-card">
                                     <div class="related-image">
@@ -115,10 +117,21 @@
                                         @endif
                                     </div>
 
-                                    <button class="related-cart-btn" title="Thêm vào giỏ hàng"
-                                        data-product-id="{{ $rp->idProduct }}" @if($rp->Status === 'Stopped') disabled @endif>
-                                        <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
-                                    </button>
+                                    @if($rp->Status !== 'Stopped')
+                                        @if($hasLabeled)
+                                            {{-- CÓ size: icon dẫn thẳng sang trang chi tiết để chọn size --}}
+                                            <a class="related-cart-btn" title="Chọn size"
+                                                href="{{ route('product.show', $rp->idProduct) }}">
+                                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Chọn size">
+                                            </a>
+                                        @else
+                                            {{-- KHÔNG có size: nút thêm vào giỏ bằng AJAX --}}
+                                            <button class="related-cart-btn" type="button" title="Thêm vào giỏ hàng"
+                                                data-product-id="{{ $rp->idProduct }}">
+                                                <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
+                                            </button>
+                                        @endif
+                                    @endif
                                 </div>
                             @endforeach
                         </div>

@@ -24,7 +24,9 @@ class ProductController extends Controller
         $sizesSorted  = $product->sizes->sortBy('Price')->values();
         $defaultSize  = $sizesSorted->first();               // có thể là size NULL nếu bạn seed kiểu không-size
         $hasLabeled   = $product->sizes->whereNotNull('Size')->isNotEmpty(); // chỉ hiện khu chọn size khi có S/M/L
-        $currentPrice = $defaultSize?->Price;
+        $currentPrice = $defaultSize?->Price
+            ?? $product->Price      // ⬅️ fallback từ cột Price trên Product
+            ?? null;
 
         // Sản phẩm liên quan (tuỳ chọn)
         $related = Product::with('sizes:idProductSize,Size,Price,ProductId')

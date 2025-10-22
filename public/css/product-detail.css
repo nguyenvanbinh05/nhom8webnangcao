@@ -385,3 +385,27 @@
         flex: 0 0 100%;
     }
 }
+.sizes label.size {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.sizes label.size input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.sizes label.size span {
+    display: inline-block;
+    min-width: 36px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.sizes label.size input:checked + span {
+    border-color: #ef6c00;
+    background: #fff7ed;
+    color: #ef6c00;
+    font-weight: 600;
+}
