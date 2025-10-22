@@ -1,6 +1,6 @@
 <div class="formUpdate">
     <div class="overlay" id="overlay">
-        <form class="formContent" id="categoryupdateForm" method="POST">
+        <form class="formContent" id="editCategoryForm" method="POST">
              @csrf
              @method('PUT')
             <h2>Cập nhật thông tin</h2>
@@ -32,5 +32,25 @@
 </div>
 
 <script>
-    const routeUpdateTemplate = "{{ route('category.update', ':id') }}";
+    document.querySelectorAll('.buttonEditForm').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const route = this.dataset.route;
+            const id = this.dataset.id; 
+            const name = this.dataset.name;
+            const desc = this.dataset.desc; 
+            const status = this.dataset.status; 
+
+            const form = document.getElementById('editCategoryForm');
+            form.action = route;
+
+            // Điền dữ liệu vào form
+            document.getElementById('editNameCategory').value = name;
+            document.getElementById('editdescription').value = desc;
+            document.getElementById('editstatus').value = status;
+
+            // Hiển thị form
+            document.querySelector('.formUpdate').classList.add("active");
+        });
+    });
 </script>

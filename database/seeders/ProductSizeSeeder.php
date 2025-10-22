@@ -23,7 +23,6 @@ class ProductSizeSeeder extends Seeder
             ['Size' => 'M', 'Price' => 40000, 'ProductId' => 3],
             ['Size' => 'L', 'Price' => 45000, 'ProductId' => 3],
 
-            ['Price' => 45000, 'ProductId' => 4]
         ];
 
         foreach ($sizes as $size) {

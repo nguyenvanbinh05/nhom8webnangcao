@@ -30,7 +30,7 @@
             <tr class="table__row">
                 <td class="table__cell">{{$index + 1}}</td>
                 <td class="table__cell order">{{ $category->NameCategory }}</td>
-                <td class="table__cell">{{ $category->description }}</td>
+                <td class="table__cell">{{ $category->Description }}</td>
                 <td class="table__cell">{{ $category->products_count ?? 0 }}</td>
                 <td class="table__cell">
                     @if ($category->Status === 'Available')
@@ -42,9 +42,10 @@
                 <td class="table__cell actions">
                     <a href="#"
                         class="actions__btn buttonEditForm"
+                        data-route="{{ route('category.update', $category->idCategory) }}"
                         data-id="{{ $category->idCategory }}"
                         data-name="{{ $category->NameCategory }}"
-                        data-desc="{{ $category->description }}"
+                        data-desc="{{ $category->Description }}"
                         data-status="{{ $category->Status }}">
                         <i class="fa-solid fa-pen-to-square actions__icon"></i>
                     </a>

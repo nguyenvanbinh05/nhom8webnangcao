@@ -24,7 +24,7 @@
         </li>
         @if(Auth::user()->role === 'admin')
             <li
-                class="sidebar__item {{ in_array(Route::currentRouteName(), ['productManagement', 'categoryManagement']) ? 'sidebar__item--active' : '' }}">
+                class="sidebar__item">
                 <a href="#" class="sidebar__link sidebar__link-dropdown">
                     <i class="fas fa-boxes sidebar__icon"></i>
                     <div class="sidebar__dropdowm-text">
@@ -33,7 +33,7 @@
                     </div>
                 </a>
                 <ul class="sidebar__submenu sidebar__submenu--hidden">
-                    <li class="sidebar__subitem"><a href="{{ route('product.index') }}" class="sidebar__sublink">danh
+                    <li class="sidebar__subitem"><a href="{{ route('adminProduct.index') }}" class="sidebar__sublink">danh
                             sách sản phẩm</a></li>
                     <li class="sidebar__subitem"><a href="{{ route('category.index') }}" class="sidebar__sublink">danh
                             mục sản phảm</a></li>

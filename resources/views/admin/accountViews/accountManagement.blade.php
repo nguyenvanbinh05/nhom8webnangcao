@@ -78,16 +78,22 @@
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i
-                                class="fa-regular fa-eye actions__icon"></i></button>
+                                    class="fa-regular fa-eye actions__icon"></i></button>
                             <button class="actions__btn"><i
                                     class="fa-solid fa-pen-to-square actions__icon"></i></button>
-                            <button class="actions__btn"><i
-                                    class="fa-solid fa-trash actions__icon"></i></button>
+                            <form action="{{ route('accounts.destroy', $staff->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa không?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="actions__btn"><i
+                                        class="fa-solid fa-trash actions__icon"></i></button>
+                            </form>
                         </div>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7">Không có nhân viên nào.</td></tr>
+                <tr>
+                    <td colspan="7">Không có nhân viên nào.</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
@@ -119,20 +125,39 @@
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i
-                                class="fa-regular fa-eye actions__icon"></i></button>
-                            <button class="actions__btn"><i
-                                    class="fa-solid fa-pen-to-square actions__icon"></i></button>
-                            <button class="actions__btn"><i
-                                    class="fa-solid fa-trash actions__icon"></i></button>
+                                    class="fa-regular fa-eye actions__icon"></i></button>
+                            <a href="#"
+                                class="actions__btn buttonEditForm"
+                                data-route="{{ route('accounts.update', $customer->id) }}"
+                                data-id="{{ $customer->id }}"
+                                data-name="{{ $customer->name }}"
+                                data-email="{{ $customer->email }}"
+                                data-phone="{{ $customer->phone }}"
+                                data-role="{{ $customer->role }}"
+                                data-status="{{ $customer->status }}">
+                                <i class="fa-solid fa-pen-to-square actions__icon"></i>
+                            </a>
+
+                            <form action="{{ route('accounts.destroy', $customer->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa không?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="actions__btn"><i
+                                        class="fa-solid fa-trash actions__icon"></i></button>
+                            </form>
                         </div>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7">Không có khách hàng nào.</td></tr>
+                <tr>
+                    <td colspan="7">Không có khách hàng nào.</td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 </div>
+
+@include('admin.accountViews.accountAdd')
+@include('admin.accountViews.accountEdit')
 
 @endsection

@@ -6,8 +6,21 @@
 @section('content')
 <div class="content__body">
     <div class="content__header">
+        <!-- Search -->
+        <form action="{{ route('adminProduct.index') }}" method="GET">
+            <div class="search">
+                <input type="text"
+                    class="search__input"
+                    name="search"
+                    placeholder="Tìm kiếm theo id, tên sản phẩm..."
+                    value="{{ $search ?? '' }}">
+                <button type="submit" class="search__btn">
+                    <i class="fa-solid fa-magnifying-glass search__icon"></i>
+                </button>
+            </div>
+        </form>
         <!-- Action buttons -->
-        <a href="{{ route('product.create') }}" class="buttonAddForm">
+        <a href="{{ route('adminProduct.create') }}" class="buttonAddForm">
             <i class="fa-solid fa-plus"></i>
             <span>Thêm mới</span>
         </a>
@@ -59,11 +72,13 @@
                 </td>
                 <td class="table__cell actions-column">
                     <div class="action-item">
-                        <button class="actions__btn"><i
-                                class="fa-regular fa-eye actions__icon"></i></button>
-                        <a href="{{ route('product.edit', $product->idProduct) }}" class="actions__btn"><i
+                        <a href="{{ route('adminProduct.show', $product->idProduct) }}"
+                            class="apd-actions-btn apd-btn-show-detail" title="Xem chi tiết">
+                            <i class="fa-regular fa-eye apd-actions-icon"></i>
+                        </a>
+                        <a href="{{ route('adminProduct.edit', $product->idProduct) }}" class="actions__btn"><i
                                 class="fa-solid fa-pen-to-square actions__icon"></i></a>
-                        <form action="{{ route('product.destroy', $product->idProduct) }}" method="POST" style="display:inline-block;"
+                        <form action="{{ route('adminProduct.destroy', $product->idProduct) }}" method="POST" style="display:inline-block;"
                             onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');">
                             @csrf
                             @method('DELETE')
@@ -73,8 +88,13 @@
                     </div>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="7" style="text-align: center;">Không có sản phẩm nào.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>
+
 @endsection

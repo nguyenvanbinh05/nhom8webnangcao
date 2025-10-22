@@ -15,8 +15,20 @@ class AdminProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
+        // Query
+        $products = Product::query();
+        if ($search) {
+            $products->where('NameProduct', 'like', "%{$search}%")
+                ->orWhere('Description', 'like', "%{$search}%");
+
+            $products = $products->get();
+            return view('admin.productViews.productManagement', compact('products', 'search'));
+        }
+
         // Lấy tất cả sản phẩm kèm category, size và ảnh bổ sung
         $products = Product::with(['category', 'sizes', 'additationImages'])->get();
 
@@ -96,7 +108,6 @@ class AdminProductController extends Controller
                 ]);
             }
         }
-
         // Nếu có ảnh bổ sung
         if ($request->hasFile('additationImages')) {
             foreach ($request->file('additationImages') as $image) {
@@ -110,7 +121,7 @@ class AdminProductController extends Controller
             }
         }
 
-        return redirect()->route('product.index')->with('success', 'Thêm sản phẩm thành công!');
+        return redirect()->route('adminProduct.index')->with('success', 'Thêm sản phẩm thành công!');
     }
 
     /**
@@ -118,7 +129,10 @@ class AdminProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::with(['category', 'sizes', 'additationImages'])
+            ->findOrFail($id);
+
+        return view('admin.productViews.productShowInfo', compact('product'));
     }
 
     /**
@@ -136,7 +150,93 @@ class AdminProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // 1. Lấy sản phẩm theo id
+        $product = Product::with('sizes', 'additationImages')->findOrFail($id);
+
+        // 2. Validate dữ liệu đầu vào
+        $request->validate([
+            'NameProduct' => 'required|string|max:255',
+            'CategoryId' => 'required|exists:category,idCategory',
+            'Price' => 'nullable|numeric|min:0',
+            'Description' => 'required|string',
+            'Status' => 'required|in:Available,Stopped',
+            'MainImage' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
+            'additationImages.*' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
+            'productType' => 'required|in:single,multiple',
+            'sizes.*.Size' => 'required_if:productType,multiple',
+            'sizes.*.Price' => 'required_if:productType,multiple|numeric|min:0'
+        ]);
+
+        // 3. Cập nhật thông tin cơ bản
+        $product->NameProduct = $request->NameProduct;
+        $product->CategoryId = $request->CategoryId;
+        $product->Description = $request->Description;
+        $product->Status = $request->Status;
+
+        // 4. Xử lý ảnh chính
+        if ($request->hasFile('MainImage')) {
+            // Xóa ảnh cũ nếu cần
+            if ($product->MainImage && file_exists(storage_path('app/public/' . $product->MainImage))) {
+                unlink(storage_path('app/public/' . $product->MainImage));
+            }
+
+            // Lưu ảnh mới
+            if ($request->hasFile('MainImage')) {
+                $image = $request->file('MainImage');
+                $extension = $image->getClientOriginalExtension();
+                $imageName = time() . '_' . Str::random(20) . '.' . $extension;
+                $path_image = $image->storeAs('images', $imageName);
+            }
+            $product->MainImage = $path_image;
+        }
+
+        // 5. Xử lý giá bán
+        if ($request->productType === 'single') {
+            $product->Price = $request->Price;
+            // Xóa các size cũ nếu có
+            $product->sizes()->delete();
+        } elseif ($request->productType === 'multiple') {
+            $product->Price = null;
+            // Xóa size cũ trước khi thêm mới
+            $product->sizes()->delete();
+
+            if ($request->has('sizes')) {
+                foreach ($request->sizes as $size) {
+                    ProductSize::create([
+                        'Size' => $size['Size'],
+                        'Price' => $size['Price'],
+                        'ProductId' => $product->idProduct,
+                    ]);
+                }
+            }
+        }
+
+        // 6. Xử lý ảnh phụ
+        if ($request->hasFile('additationImages')) {
+            if ($product->additationImages) {
+                foreach ($product->additationImages as $oldImage) {
+                    if (Storage::exists($oldImage->AdditationLink)) {
+                        Storage::delete($oldImage->AdditationLink);
+                    }
+                    $oldImage->delete();
+                }
+            }
+            foreach ($request->file('additationImages') as $image) {
+                $additation_img_extension = $image->getClientOriginalExtension();
+                $additation_img_name = time() . '_' . Str::random(20) . '.' . $additation_img_extension;
+                $path = $image->storeAs('images', $additation_img_name);
+                AdditationImage::create([
+                    'AdditationLink' => $path,
+                    'ProductId' => $product->idProduct,
+                ]);
+            }
+        }
+
+        // 7. Lưu sản phẩm
+        $product->save();
+
+        return redirect()->route('adminProduct.index')
+            ->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
     /**
@@ -163,6 +263,6 @@ class AdminProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('product.index')->with('success', 'Xóa sản phẩm thành công!');
+        return redirect()->route('adminProduct.index')->with('success', 'Xóa sản phẩm thành công!');
     }
 }

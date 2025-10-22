@@ -25,7 +25,7 @@ html {
 
 /* ==================== layout view ==================== */
 .container {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     background-color: var(--background-color_pages);
 
@@ -908,6 +908,9 @@ html {
 .sidebar__expanded {
     width: 60px;
 }
+.p-none {
+    display: none;
+}
 /* ==================== keyframes ==================== */
 @keyframes hiddenTextSidebar {
     /* animation: hiddenTextSidebar 0.3s forwards; */
@@ -1053,4 +1056,157 @@ html {
     .account-menu {
         min-width: 260px;
     }
+}
+
+
+
+/* ==================== form thêm mới tài khoản ==================== */
+/* Tiêu đề */
+.form-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Nhóm input */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Label */
+.form-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+/* Input */
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+
+
+/* ==================== form show thông tin sản phẩm ==================== */
+.admin-product-detail-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.admin-product-detail-header {
+    margin-bottom: 30px;
+    font-size: 2.6rem;
+}
+
+.admin-product-detail-card {
+    display: flex;
+    gap: 30px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.apd-left {
+    flex: 1;
+    min-width: 300px;
+}
+
+.apd-right {
+    flex: 2;
+    min-width: 350px;
+}
+
+.apd-main-img {
+    width: 80%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.apd-subtitle {
+    margin-top: 20px;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.apd-sub-images {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.apd-sub-images img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.apd-info-table, .apd-size-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.apd-info-table th, .apd-info-table td,
+.apd-size-table th, .apd-size-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.apd-badge {
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.apd-badge-success {
+    background-color: #28a745;
+}
+
+.apd-badge-inactive {
+    background-color: #6c757d;
+}
+
+.apd-action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.apd-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #fff;
+    display: inline-block;
+}
+
+.apd-btn-back {
+    background-color: #6c757d;
+}
+
+.apd-btn-edit {
+    background-color: #ffc107;
+    color: #333;
 }
