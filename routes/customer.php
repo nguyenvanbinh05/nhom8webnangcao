@@ -53,9 +53,24 @@ Route::post('/cart/remove',   [CartController::class, 'remove'])->name('cart.rem
 //     return view('costumer.cart');
 // })->name('cart');
 
-Route::get('/thanhtoan', function () {
-    return view('customer.checkout');
-})->name('checkout');
+// Route::get('/thanhtoan', function () {
+//     return view('customer.checkout');
+// })->name('checkout');
+
+// routes/web.php
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderHistoryController;
+
+// Thanh toán (bắt buộc đăng nhập & đã xác thực email)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/checkout',  [CheckoutController::class, 'show'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'place'])->name('checkout.place');
+
+    // Lịch sử đơn hàng
+    Route::get('/orders',     [OrderHistoryController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderHistoryController::class, 'show'])->name('orders.show');
+});
+
 
 // routes/web.php
 use App\Http\Controllers\ContactController;

@@ -25,11 +25,15 @@
                                 <form method="POST" action="{{ route('cart.remove') }}">
                                     @csrf
                                     <input type="hidden" name="idCartItem" value="{{ $it->idCartItem }}">
-                                    <button class="remove-btn" title="Xóa" type="button">×</button>
+                                    <button class="remove-btn" title="Xóa" type="submit">×</button>
                                 </form>
 
-                                <img src="{{ asset($it->product->MainImage ?: 'images/products/placeholder.svg') }}"
-                                    alt="{{ $it->product->NameProduct }}">
+                                @php
+                                    $imgUrl = $it->product->MainImage ? asset('storage/' . $it->product->MainImage) : null;
+                                @endphp
+                                @if($imgUrl)
+                                    <img src="{{ $imgUrl }}" alt="{{ $it->product->NameProduct }}">
+                                @endif
 
                                 <div class="cart-info">
                                     <a href="{{ route('product.show', $it->product->idProduct) }}" class="product-name">
@@ -42,12 +46,12 @@
                                 </div>
 
                                 <div class="quantity-control">
-                                    <form method="POST" action="{{ route('cart.update') }}">
+                                    <form method="POST" action="{{ route('cart.update') }}" class="quantity-control">
                                         @csrf
                                         <input type="hidden" name="idCartItem" value="{{ $it->idCartItem }}">
-                                        <button class="qty-decrease" type="button">-</button>
+                                        <button name="action" value="decrease" class="qty-decrease" type="button">-</button>
                                         <span class="qty-value">{{ $it->quantity }}</span>
-                                        <button class="qty-increase" type="button">+</button>
+                                        <button name="action" value="increase" class="qty-increase" type="button">+</button>
                                     </form>
                                 </div>
                             </div>
@@ -73,94 +77,52 @@
 
     @include('customer.partials.popular-products')
     <script>
-        function csrf() {
-            const m = document.querySelector('meta[name="csrf-token"]');
-            return m ? m.getAttribute('content') : '';
-        }
-        function vnd(n) {
-            return Number(n).toLocaleString('vi-VN') + 'đ';
-        }
+        (() => {
+            const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
+            const vnd = n => Number(n).toLocaleString('vi-VN') + 'đ';
+            const post = (url, data) => fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(r => r.json());
 
-        document.addEventListener('click', async function (e) {
-            // Tăng/giảm số lượng
-            const incBtn = e.target.closest('.qty-increase');
-            const decBtn = e.target.closest('.qty-decrease');
-            const rmBtn = e.target.closest('.remove-btn');
+            document.addEventListener('click', async (e) => {
+                const inc = e.target.closest('.qty-increase');
+                const dec = e.target.closest('.qty-decrease');
+                const rm = e.target.closest('.remove-btn');
+                if (!inc && !dec && !rm) return;
+                e.preventDefault();
 
-            if (incBtn || decBtn) {
-                const itemEl = e.target.closest('.cart-item');
-                if (!itemEl) return;
-                const id = itemEl.getAttribute('data-id');
-                const action = incBtn ? 'increase' : 'decrease';
-
-                try {
-                    const res = await fetch("{{ route('cart.update') }}", {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf(), 'Accept': 'application/json' },
-                        body: JSON.stringify({ idCartItem: Number(id), action })
-                    });
-                    const data = await res.json();
-                    if (!data.ok) throw new Error('update failed');
-
-                    // cập nhật số lượng hiển thị
-                    const qtySpan = itemEl.querySelector('.qty-value');
-                    if (qtySpan) qtySpan.textContent = data.quantity;
-
-                    // cập nhật tổng tiền
-                    const totalEl = document.getElementById('cart-total');
-                    if (totalEl) totalEl.textContent = vnd(data.cartTotal);
-
-                    // (tuỳ chọn) cập nhật badge giỏ hàng trên header
-                    const badge = document.getElementById('cart-count');
-                    if (badge && data.cartCount != null) badge.textContent = data.cartCount;
-
-                } catch (err) {
-                    console.error(err);
-                    alert('Không thể cập nhật số lượng.');
-                }
-            }
-
-            // Xoá item
-            if (rmBtn) {
-                const itemEl = rmBtn.closest('.cart-item');
-                if (!itemEl) return;
-                const id = itemEl.getAttribute('data-id');
+                const item = e.target.closest('.cart-item'); if (!item) return;
+                const id = Number(item.dataset.id);
 
                 try {
-                    const res = await fetch("{{ route('cart.remove') }}", {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf(), 'Accept': 'application/json' },
-                        body: JSON.stringify({ idCartItem: Number(id) })
-                    });
-                    const data = await res.json();
-                    if (!data.ok) throw new Error('remove failed');
-
-                    // xoá khỏi DOM
-                    itemEl.remove();
-
-                    // cập nhật tổng + badge
-                    const totalEl = document.getElementById('cart-total');
-                    if (totalEl) totalEl.textContent = vnd(data.cartTotal);
-                    const badge = document.getElementById('cart-count');
-                    if (badge && data.cartCount != null) badge.textContent = data.cartCount;
-
-                    // nếu giỏ trống -> thay container bằng khối "giỏ hàng trống"
-                    if (data.empty) {
-                        const container = document.querySelector('.cart-container');
-                        if (container) {
-                            container.outerHTML = `
-                        <div class="cart-empty">
-                          <p>🛒 Giỏ hàng trống</p>
-                          <a href="{{ route('menu.index') }}" class="checkout-btn">Mua ngay</a>
-                        </div>`;
+                    if (inc || dec) {
+                        const data = await post("{{ route('cart.update') }}", { idCartItem: id, action: inc ? 'increase' : 'decrease' });
+                        if (!data.ok) throw 0;
+                        item.querySelector('.qty-value').textContent = data.quantity;
+                        const total = document.getElementById('cart-total'); if (total) total.textContent = vnd(data.cartTotal);
+                        const badge = document.getElementById('cart-count'); if (badge && data.cartCount != null) badge.textContent = data.cartCount;
+                    } else if (rm) {
+                        const data = await post("{{ route('cart.remove') }}", { idCartItem: id });
+                        if (!data.ok) throw 0;
+                        item.remove();
+                        const total = document.getElementById('cart-total'); if (total) total.textContent = vnd(data.cartTotal);
+                        const badge = document.getElementById('cart-count'); if (badge && data.cartCount != null) badge.textContent = data.cartCount;
+                        if (data.empty) {
+                            const wrap = document.querySelector('.cart-container');
+                            if (wrap) wrap.outerHTML = `<div class="cart-empty"><p>🛒 Giỏ hàng trống</p><a href="{{ route('menu.index') }}" class="checkout-btn">Mua ngay</a></div>`;
                         }
                     }
-                } catch (err) {
-                    console.error(err);
-                    alert('Không thể xoá sản phẩm.');
+                } catch {
+                    alert('Có lỗi khi cập nhật giỏ hàng.');
                 }
-            }
-        });
+            });
+        })();
     </script>
-
 @endsection
