@@ -13,8 +13,11 @@
 
             @if($items->isEmpty())
                 <div class="cart-empty">
-                    <p>🛒 Giỏ hàng trống</p>
-                    <a href="{{ route('menu.index') }}" class="checkout-btn">Mua ngay</a>
+                    <div>
+                        <img src="{{ asset('images/banners/no-cart.png') }}" alt="Giỏ hàng trống">
+                    </div>
+                    <p>Giỏ hàng trống</p>
+                    <a href="{{ route('menu.index') }}" class="checkout-btn" title="Đến Menu">Đến Menu ngay</a>
                 </div>
             @else
                 <div class="cart-container">
@@ -75,7 +78,7 @@
         </div>
     </section>
 
-    @include('customer.partials.popular-products')
+    {{-- @include('customer.partials.popular-products') --}}
     <script>
         (() => {
             const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content || '';

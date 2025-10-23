@@ -30,4 +30,11 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'idProduct');
     }
+    public function getLineTotalAttribute($value)
+    {
+        if (!is_null($value)) {
+            return (int) $value;
+        }
+        return (int) $this->unit_price * (int) $this->quantity;
+    }
 }

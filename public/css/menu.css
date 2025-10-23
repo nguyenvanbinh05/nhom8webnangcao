@@ -43,7 +43,40 @@
     color: #ff8914;
     text-shadow: 1px 0 0 currentColor;
 }
-
+.menu-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.menu-search button {
+    padding: 3px 5px;
+    background-color: #ff8914;
+    border: #ff8914 solid 1px;
+    border-radius: 3px;
+    color: white;
+}
+.menu-search button:hover {
+    padding: 3px 5px;
+    background-color: transparent;
+    cursor: pointer;
+    border: #ff8914 solid 1px;
+    border-radius: 5px;
+    color: #ff8914;
+}
+.menu-search input {
+    border: 1px dashed #ff8914;
+    border-radius: 5px;
+    padding: 5px 12px 5px 12px;
+    outline: none;
+    background: #fff;
+}
+.menu-search input:hover {
+    border-color: #ff9d3c;
+}
+.menu-search input:focus {
+    border-color: #ff8914;
+    box-shadow: 0 0 0 3px rgba(255, 137, 20, 0.15), 0 0 0 1px #ff8914 inset;
+}
 /* ===== Nội dung ===== */
 .menu-content {
     flex: 1;
@@ -89,7 +122,7 @@
 
 .menu-card-img {
     width: 100%;
-    height: fit-content;
+    height: 210px;
     overflow: hidden;
     border-radius: 12px 12px 0 0;
 }
@@ -181,12 +214,13 @@
         position: relative;
         z-index: 1;
     }
+    .menu-card-img {
+        height: 140px;
+    }
     .menu-card-img img {
         object-fit: fill;
     }
-    .menu-card-img {
-        height: fit-content;
-    }
+
     .menu-section .menu-card-name {
         font-size: 1.2rem;
     }

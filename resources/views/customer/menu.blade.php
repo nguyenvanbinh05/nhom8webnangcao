@@ -74,13 +74,11 @@
                                     <!-- Nút giỏ hàng -->
                                     @if($product->Status !== 'Stopped')
                                         @if(!$hasLabeled)
-                                            {{-- KHÔNG có size: thêm vào giỏ bằng AJAX --}}
                                             <button class="menu-card-cart" title="Thêm vào giỏ hàng" type="button"
                                                 data-product-id="{{ $product->idProduct }}">
                                                 <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
                                             </button>
                                         @else
-                                            {{-- CÓ size: đi đến trang chi tiết để chọn size --}}
                                             <a class="menu-card-cart" title="Chọn size"
                                                 href="{{ route('product.show', $product->idProduct) }}">
                                                 <img src="{{ asset('images/icons/cart.svg') }}" alt="Chọn size">

@@ -9,7 +9,6 @@
     margin: 0 auto;
     padding: 0 20px;
     width: 100%;
-    overflow-x: hidden;
 }
 
 /* ===== TIÊU ĐỀ ===== */
@@ -182,7 +181,13 @@
     color: #ff8914;
     border: #ff8914 solid 1px;
 }
-
+.cart-empty {
+    justify-items: center;
+    height: fit-content;
+}
+.cart-empty a {
+    display: block;
+}
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
     .cart-container {

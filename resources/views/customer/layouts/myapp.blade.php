@@ -12,7 +12,7 @@
     <title>@yield('title', 'Coffee Shop')</title>
 </head>
 
-<body>
+<body class="site">
     @include('customer.partials.header')
     <div class="container">
         @yield('content')

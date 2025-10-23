@@ -9,7 +9,7 @@
     <section class="checkout-section">
         <div class="checkout-grid">
 
-            <!-- LEFT: THÔNG TIN GIAO HÀNG -->
+            {{-- LEFT: FORM --}}
             <form class="checkout-form" id="checkout-form" method="POST" action="{{ route('checkout.place') }}"
                 autocomplete="on">
                 @csrf
@@ -51,7 +51,6 @@
                         <option value="" selected>Chọn phường xã</option>
                     </select>
 
-                    {{-- hidden fields để POST --}}
                     <input type="hidden" name="city_id" id="city_id" value="{{ old('city_id') }}">
                     <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name') }}">
                     <input type="hidden" name="district_id" id="district_id" value="{{ old('district_id') }}">
@@ -81,24 +80,20 @@
                     </label>
                 </div>
 
-                {{-- full address (gộp) --}}
                 <input type="hidden" name="full_address" id="full_address" value="{{ old('full_address') }}">
-
-                <div class="actions">
-                    <a class="btn-outline" href="{{ route('cart.index') }}">&lt; Giỏ hàng</a>
-                    <button class="btn-primary" type="submit">Thanh toán</button>
-                </div>
+                {{-- LƯU Ý: Không để nút hành động ở đây nữa --}}
             </form>
 
-            <!-- RIGHT: TÓM TẮT ĐƠN HÀNG -->
+            {{-- RIGHT: SUMMARY --}}
             <aside class="checkout-summary">
                 <ul class="cart-list">
                     @foreach ($items as $it)
                         @php
                             $p = $it->product;
-                            $name = $p?->NameProduct ?? ("Sản phẩm #" . $it->product_id);
+                            $name = $p?->NameProduct ?? ('Sản phẩm #' . $it->product_id);
                             $img = $p && $p->MainImage ? asset('storage/' . $p->MainImage) : asset('images/products/placeholder.svg');
-                            $price = number_format($it->price, 0, ',', '.') . 'đ';
+                            $line = (int) $it->price * (int) $it->quantity;               // GIÁ * SL
+                            $lineTx = number_format($line, 0, ',', '.') . 'đ';
                         @endphp
                         <li class="cart-item">
                             <img src="{{ $img }}" alt="{{ $name }}">
@@ -107,7 +102,7 @@
                                     class="name">{{ $name }}</a>
                                 <div class="meta">Size {{ $it->size ?: '—' }} • x{{ $it->quantity }}</div>
                             </div>
-                            <div class="price">{{ $price }}</div>
+                            <div class="price">{{ $lineTx }}</div>
                         </li>
                     @endforeach
                 </ul>
@@ -120,11 +115,17 @@
                         <span class="grand-price">{{ number_format($total, 0, ',', '.') }}đ</span>
                     </div>
                 </div>
+
+                {{-- ACTIONS: chuyển xuống DƯỚI TỔNG TIỀN --}}
+                <div class="actions" style="margin-top:12px">
+                    <a class="btn-outline" href="{{ route('cart.index') }}">&lt; Giỏ hàng</a>
+                    <button id="place-order" class="btn-primary" type="button">Thanh toán</button>
+                </div>
             </aside>
+
         </div>
     </section>
 
-    {{-- Axios --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script>
         (function () {
@@ -143,6 +144,22 @@
             const fullAddress = document.getElementById('full_address');
             const form = document.getElementById('checkout-form');
 
+            // Nút "Thanh toán" ở cột phải -> submit form bên trái (giữ validation)
+            document.getElementById('place-order').addEventListener('click', function () {
+                // Ghép địa chỉ trước khi submit
+                if (!addressDetail.value.trim() || !cityName.value || !districtName.value || !wardName.value) {
+                    alert('Vui lòng nhập địa chỉ & chọn đầy đủ Tỉnh/Quận/Xã.');
+                    return;
+                }
+                const parts = [
+                    addressDetail.value.trim(),
+                    wardName.value, districtName.value, cityName.value
+                ].filter(Boolean);
+                fullAddress.value = parts.join(', ');
+
+                form.requestSubmit();
+            });
+
             axios({
                 url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
                 method: "GET",
@@ -150,14 +167,12 @@
             }).then(function (res) {
                 const data = res.data || [];
 
-                // fill provinces
                 for (const x of data) {
                     citis.options[citis.options.length] = new Option(x.Name, x.Id);
                 }
 
                 citis.onchange = function () {
-                    districts.length = 1;
-                    wards.length = 1;
+                    districts.length = 1; wards.length = 1;
                     districts.disabled = true; wards.disabled = true;
 
                     cityId.value = cityName.value = '';
@@ -199,20 +214,6 @@
                     wardId.value = this.value || '';
                     wardName.value = this.options[this.selectedIndex]?.text || '';
                 };
-            });
-
-            // Ghép địa chỉ trước khi submit
-            form.addEventListener('submit', function (e) {
-                if (!addressDetail.value.trim() || !cityName.value || !districtName.value || !wardName.value) {
-                    e.preventDefault();
-                    alert('Vui lòng nhập địa chỉ & chọn đầy đủ Tỉnh/Quận/Xã.');
-                    return;
-                }
-                const parts = [
-                    addressDetail.value.trim(),
-                    wardName.value, districtName.value, cityName.value
-                ].filter(Boolean);
-                fullAddress.value = parts.join(', ');
             });
         })();
     </script>

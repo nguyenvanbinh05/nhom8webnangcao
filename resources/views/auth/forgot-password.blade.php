@@ -2,14 +2,12 @@
 @section('title', 'Quên mật khẩu')
 
 @push('styles')
-    {{-- Nếu cần css riêng cho trang này --}}
-    {{--
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('css/reset-pw.css') }}">
 @endpush
 
 @section('content')
     <section class="auth-section" style="max-width:560px;margin:40px auto;">
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="desc">
             {{ __('Quên mật khẩu? Không vấn đề gì! Chỉ cần cho chúng tôi biết địa chỉ email của bạn và chúng tôi sẽ gửi cho bạn liên kết đặt lại mật khẩu để bạn có thể đặt mật khẩu mới.') }}
         </div>
 
@@ -23,13 +21,13 @@
             <div>
                 <x-input-label for="email" :value="__('Email')" />
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                    autofocus />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    autofocus class="input" />
+                <x-input-error class="error" :messages="$errors->get('email')" class="mt-2" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="btn-send">
                 <x-primary-button>
-                    {{ __('Email Password Reset Link') }}
+                    {{ __('Gửi email link đặt lại mật khẩu') }}
                 </x-primary-button>
             </div>
         </form>

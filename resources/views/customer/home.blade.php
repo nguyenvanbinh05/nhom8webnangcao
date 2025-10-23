@@ -8,6 +8,6 @@
 @section('content')
     @include('customer.partials.hero')
     @include('customer.partials.about')
-    @include('customer.partials.popular-products')
+    {{-- @include('customer.partials.popular-products') --}}
     @include('customer.partials.contact')
 @endsection

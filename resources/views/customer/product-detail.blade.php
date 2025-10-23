@@ -63,7 +63,8 @@
 
 
                     <div class="product-action">
-                        <button class="btn-buy" data-product-id="{{ $product->idProduct }}">Mua ngay</button>
+                        <button id="btn-buy-now" class="btn-buy" type="button"
+                            data-product-id="{{ $product->idProduct }}">Mua ngay</button>
                         <form method="POST" action="{{ route('cart.add') }}">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->idProduct }}">
@@ -94,9 +95,11 @@
                             @foreach ($related as $rp)
                                 @php
                                     $img = $rp->MainImage ? ('storage/' . $rp->MainImage) : 'images/products/placeholder.svg';
-                                    $rpMin = $rp->sizes->sortBy('Price')->first(); // giá nhỏ nhất (kể cả size NULL)
                                     $hasLabeled = $rp->sizes->whereNotNull('Size')->isNotEmpty();
-                                  @endphp
+                                    $minRow = $rp->sizes->sortBy('Price')->first();
+                                    $displayPrice = $minRow->Price ?? $rp->Price;
+                                @endphp
+
 
                                 <div class="related-card">
                                     <div class="related-image">
@@ -110,8 +113,8 @@
                                             {{ $rp->NameProduct }}
                                         </a>
 
-                                        @if($rpMin)
-                                            <p class="related-price">{{ number_format($rpMin->Price, 0, ',', '.') }} đ</p>
+                                        @if(!is_null($displayPrice))
+                                            <p class="related-price">{{ number_format($displayPrice, 0, ',', '.') }} đ</p>
                                         @else
                                             <p class="related-price">—</p>
                                         @endif
@@ -149,67 +152,86 @@
             const thumbs = document.getElementById('pd-thumbs');
             if (mainImg && thumbs) {
                 thumbs.addEventListener('click', function (e) {
-                    const t = e.target.closest('img');
-                    if (!t) return;
-
+                    const t = e.target.closest('img'); if (!t) return;
                     thumbs.querySelectorAll('img.active').forEach(x => x.classList.remove('active'));
                     t.classList.add('active');
-
                     const src = t.dataset.src || t.getAttribute('src');
                     if (src) mainImg.setAttribute('src', src);
                 });
             }
 
             // ---------- SIZE → CẬP NHẬT GIÁ + HIDDEN INPUT ----------
-            const priceEl = document.querySelector('.price-current');           // nơi hiển thị giá
-            const sizeWrap = document.getElementById('pd-size-list');            // container các nút size
-            const sizeInput = document.getElementById('pd-size-input');           // <input type="hidden" name="size">
-            const qtyInput = document.getElementById('pd-qty-input');            // <input type="hidden" name="quantity">
-            const qtyBox = document.getElementById('quantity');                // input số lượng hiển thị
+            const priceEl = document.querySelector('.price-current');
+            const sizeWrap = document.getElementById('pd-size-list');
+            const sizeInput = document.getElementById('pd-size-input');   // <-- khai báo 1 lần
+            const qtyInput = document.getElementById('pd-qty-input');    // <--
+            const qtyBox = document.getElementById('quantity');
 
-            // đồng bộ số lượng hiển thị -> hidden (nếu có)
             if (qtyBox && qtyInput) {
                 const syncQty = () => {
                     const val = Math.max(1, parseInt(qtyBox.value || '1', 10));
-                    qtyBox.value = val;
-                    qtyInput.value = val;
+                    qtyBox.value = val; qtyInput.value = val;
                 };
                 syncQty();
                 qtyBox.addEventListener('change', syncQty);
                 qtyBox.addEventListener('input', syncQty);
             }
 
-            // click chọn size
             if (priceEl && sizeWrap) {
                 sizeWrap.addEventListener('click', function (e) {
-                    const btn = e.target.closest('[data-role="size"]');
-                    if (!btn) return;
-                    e.preventDefault(); // tránh submit form nếu nút nằm trong <form>
-
-                    // toggle active
+                    const btn = e.target.closest('[data-role="size"]'); if (!btn) return;
+                    e.preventDefault();
                     sizeWrap.querySelectorAll('[data-role="size"].active').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
 
-                    // cập nhật giá hiển thị
                     const raw = btn.dataset.price;
                     if (raw) {
                         priceEl.textContent = Number(raw).toLocaleString('vi-VN') + 'đ';
-                        priceEl.dataset.currentPrice = raw; // lưu cho mục đích khác (nếu cần)
+                        priceEl.dataset.currentPrice = raw;
                     }
-
-                    // cập nhật hidden size (nếu có)
                     if (sizeInput) sizeInput.value = btn.dataset.size || '';
                 });
 
-                // set giá & hidden size ban đầu theo nút đang active (nếu có)
-                const initBtn = sizeWrap.querySelector('[data-role="size"].active') ||
-                    sizeWrap.querySelector('[data-role="size"]');
+                const initBtn = sizeWrap.querySelector('[data-role="size"].active') || sizeWrap.querySelector('[data-role="size"]');
                 if (initBtn) {
                     if (sizeInput) sizeInput.value = initBtn.dataset.size || '';
                     const raw = initBtn.dataset.price;
                     if (raw) priceEl.textContent = Number(raw).toLocaleString('vi-VN') + 'đ';
                 }
             }
+
+            // ---------- MUA NGAY: add to cart -> redirect checkout ----------
+            const buyBtn = document.getElementById('btn-buy-now');
+            const csrf = () => document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+            buyBtn?.addEventListener('click', async () => {
+                const productId = buyBtn.dataset.productId;
+                const size = sizeInput ? (sizeInput.value || null) : null;
+                const quantity = qtyInput ? Math.max(1, parseInt(qtyInput.value || '1', 10)) : 1;
+
+                try {
+                    const res = await fetch("{{ route('cart.add') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrf(),
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ product_id: Number(productId), size, quantity })
+                    });
+                    const data = await res.json();
+
+                    if (data?.redirect) { window.location.href = data.redirect; return; }
+                    if (data?.ok) { window.location.href = "{{ route('checkout') }}"; return; }
+
+                    alert(data?.message || 'Không thể thực hiện Mua ngay.');
+                } catch (err) {
+                    console.error(err);
+                    alert('Có lỗi khi thêm vào giỏ.');
+                }
+            });
         });
     </script>
+
 @endsection
