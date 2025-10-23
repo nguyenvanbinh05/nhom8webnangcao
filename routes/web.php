@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 
 
@@ -12,12 +13,9 @@ Route::get('/', function () {
 
     if (Auth::check()) {
         $user = Auth::user();
-        if ($user->role === 'admin') {
-            return redirect('/admin');
-        } elseif ($user->role === 'staff') {
-            return redirect('/admin');
-        } else {
-            return view('customer.home');
+
+        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice'); // trang nhắc xác minh của Breeze
         }
     }
 
