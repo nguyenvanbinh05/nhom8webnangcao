@@ -62,7 +62,7 @@
                     <th class="table__cell">Số điện thoại</th>
                     <th class="table__cell">Email</th>
                     <th class="table__cell">Ngày tạo</th>
-                    <th class="table__cell">Trạng thái</th>
+                    <!-- <th class="table__cell">Trạng thái</th> -->
                     <th class="table__cell">Hành động</th>
                 </tr>
             </thead>
@@ -74,7 +74,7 @@
                     <td class="table__cell">{{ $staff->phone }}</td>
                     <td class="table__cell">{{ $staff->email }}</td>
                     <td class="table__cell">{{ $staff->created_at->format('Y-m-d') }}</td>
-                    <td class="table__cell">{{ $staff->status === 'active' ? 'Kích hoạt' : 'Vô hiệu hóa' }}</td>
+                    <!-- <td class="table__cell">{{ $staff->status === 'active' ? 'Kích hoạt' : 'Vô hiệu hóa' }}</td> -->
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i
@@ -109,7 +109,7 @@
                     <th class="table__cell">Số điện thoại</th>
                     <th class="table__cell">Email</th>
                     <th class="table__cell">Ngày tạo</th>
-                    <th class="table__cell">Trạng thái</th>
+                    <!-- <th class="table__cell">Trạng thái</th> -->
                     <th class="table__cell">Hành động</th>
                 </tr>
             </thead>
@@ -121,7 +121,7 @@
                     <td class="table__cell">{{ $customer->phone }}</td>
                     <td class="table__cell">{{ $customer->email }}</td>
                     <td class="table__cell">{{ $customer->created_at->format('Y-m-d') }}</td>
-                    <td class="table__cell">{{ $customer->status === 'active' ? 'Kích hoạt' : 'Vô hiệu hóa' }}</td>
+                    <!-- <td class="table__cell">{{ $customer->status === 'active' ? 'Kích hoạt' : 'Vô hiệu hóa' }}</td> -->
                     <td class="table__cell actions-column">
                         <div class="action-item">
                             <button class="actions__btn"><i
@@ -133,8 +133,7 @@
                                 data-name="{{ $customer->name }}"
                                 data-email="{{ $customer->email }}"
                                 data-phone="{{ $customer->phone }}"
-                                data-role="{{ $customer->role }}"
-                                data-status="{{ $customer->status }}">
+                                data-role="{{ $customer->role }}">
                                 <i class="fa-solid fa-pen-to-square actions__icon"></i>
                             </a>
 
