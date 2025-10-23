@@ -410,6 +410,7 @@ a {
 footer {
     background-color: #1c1613;
     padding-top: 75px;
+    margin-top: auto;
 }
 
 .footer .title {

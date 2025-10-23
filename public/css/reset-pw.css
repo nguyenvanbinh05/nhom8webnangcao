@@ -1,14 +1,13 @@
-/* ==== AUTH – FORGOT PASSWORD (FLAT) ==== */
 :root {
-    --accent: #ff8914; /* đỏ đậm */
-    --border: #bebebe; /* xám nhạt */
-    --text: #1f2937; /* xám 800 */
-    --muted: #6b7280; /* xám 500 */
+    --accent: #ff8914;
+    --border: #bebebe;
+    --text: #1f2937;
+    --muted: #6b7280;
 }
 
 .auth-section {
     max-width: 560px;
-    margin: 40px auto;
+    margin: 120px auto;
     color: var(--text);
 }
 
@@ -18,10 +17,9 @@
     color: var(--muted);
     margin-bottom: 16px;
     padding-left: 16px;
-    border-left: 3px solid var(--border); /* vạch dọc nhẹ như mẫu */
+    border-left: 3px solid var(--border);
 }
 
-/* Nhãn + input phẳng */
 .auth-section label {
     display: block;
     font-size: 14px;
@@ -30,7 +28,6 @@
 }
 .auth-section .input,
 .auth-section input[type="email"].block {
-    /* phòng trường hợp x-text-input render class mặc định */
     width: 100%;
     padding: 10px 12px;
     font-size: 15px;
@@ -46,22 +43,18 @@
     box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.12);
 }
 
-/* Lỗi & status */
 .auth-section .error,
 .auth-section .mt-2 {
-    /* nếu component gán .mt-2 cho error */
     margin-top: 6px;
     font-size: 13px;
     color: #dc2626;
 }
 .auth-section .mb-4 {
-    /* x-auth-session-status mặc định mình để margin sẵn */
     margin-bottom: 12px !important;
     font-size: 13px;
     color: #059669;
 }
 
-/* Nút gửi email */
 .auth-section .btn-send {
     margin-top: 14px;
 }
@@ -82,7 +75,8 @@
     transition: filter 0.15s, opacity 0.15s;
 }
 .auth-section .btn-send button:hover {
-    filter: brightness(0.98);
+    background-color: transparent;
+    color: var(--accent);
 }
 .auth-section .btn-send button:active {
     filter: brightness(0.95);
