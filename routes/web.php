@@ -13,7 +13,9 @@ Route::get('/', function () {
 
     if (Auth::check()) {
         $user = Auth::user();
-
+        if (in_array($user->role, ['admin', 'staff'], true)) {
+            return redirect('/admin');
+        }
         if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
             return redirect()->route('verification.notice'); // trang nhắc xác minh của Breeze
         }
@@ -40,7 +42,7 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['auth', 'verified', 'role:admin,staff'])->group(function () {
         Route::get('/', [PageController::class, 'homePage'])->name('homePage');
-        Route::get('/product-management', [PageController::class, 'productManagement'])->name('productManagement');
+        require __DIR__ . '/orderManagement.php';
         Route::get('/point-of-sale', [PageController::class, 'pos'])->name('pos');
     });
 
@@ -50,6 +52,5 @@ Route::prefix('admin')->group(function () {
         require __DIR__ . '/ingredient.php';
         require __DIR__ . '/adminProduct.php';
         require __DIR__ . '/category.php';
-        require __DIR__ . '/orderManagement.php';
     });
 });
