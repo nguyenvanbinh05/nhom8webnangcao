@@ -1,34 +1,22 @@
-// ================== DROPDOWN SIDEBAR ==================
-const sidebarItemDropdown = document.querySelectorAll('.sidebar__link-dropdown');
-const sidebarSubmenuAll = document.querySelectorAll(".sidebar__submenu--hidden");
+let root = document.documentElement;
+let toggleSidebar = document.querySelector(".header__toggle-sidebar");
+let sidebar = document.querySelector(".sidebar");
+let sidebarTitle = document.querySelector(".sidebar__title");
+let container_mainContent = document.querySelector(".container_mainContent");
 
-if (sidebarItemDropdown.length > 0) {
-    sidebarItemDropdown.forEach(item => {
-        item.addEventListener("click", function (e) {
-            e.preventDefault();
+toggleSidebar.addEventListener("click", function () {
 
-            sidebarSubmenuAll.forEach(submenu => {
-                if (submenu !== this.parentElement.querySelector(".sidebar__submenu--hidden")) {
-                    submenu.classList.remove('dropdown-active');
-                }
-            });
+    sidebar.classList.toggle("active");
+    container_mainContent.classList.toggle("active");
+    sidebar.classList.toggle("collapsed");
 
-            const sidebarSubmenu = this.parentElement.querySelector(".sidebar__submenu--hidden");
-            if (sidebarSubmenu) {
-                sidebarSubmenu.classList.toggle('dropdown-active');
-            }
-        });
-    });
-}
+})
 
 
 // // ================== FORM ADD/EDIT ==================
 const formInput = document.querySelector(".formInput");
 const btnCloseForm = document.querySelectorAll(".btnCloseForm");
 const buttonAddForm = document.querySelector(".buttonAddForm");
-// const buttonEditForm = document.querySelectorAll(".buttonEditForm");
-// const formUpdate = document.querySelector(".formUpdate");
-// const formUpdateCategory = document.getElementById('categoryupdateForm');
 
 if (formInput) {
     buttonAddForm.addEventListener("click", function (e) {
@@ -50,37 +38,6 @@ if (btnCloseForm.length > 0) {
     });
 }
 
-// if (buttonEditForm.length > 0 && formUpdate) {
-//     buttonEditForm.forEach(btn => {
-//         btn.addEventListener("click", function (e) {
-//             e.preventDefault();
-//             const id = this.dataset.id; 
-//             const name = this.dataset.name;
-//             const desc = this.dataset.desc; 
-//             const status = this.dataset.status; 
-
-//             // Điền dữ liệu vào form
-//             document.getElementById('editNameCategory').value = name;
-//             document.getElementById('editdescription').value = desc;
-//             document.getElementById('editstatus').value = status;
-
-//             formUpdateCategory.action = routeUpdateTemplate.replace(':id', id);
-
-//             // Hiển thị form
-//             formUpdate.classList.add("active");
-//         });
-//     });
-// }
-
-// if (btnCloseForm.length > 0) {
-//     btnCloseForm.forEach(btn => {
-//         btn.addEventListener("click", function (e) {
-//             e.preventDefault();
-//             formInput?.classList.remove("active");
-//             formUpdate?.classList.remove("active");
-//         });
-//     });
-// }
 
 
 // ================== ẢNH CHÍNH SẢN PHẨM ==================
