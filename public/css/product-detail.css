@@ -56,8 +56,9 @@
 .thumb-list {
     display: flex;
     gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: start;
+    width: 80%;
+    overflow-x: scroll;
 }
 
 .thumb-list img {
@@ -190,7 +191,6 @@
 
 .btn-buy,
 .btn-add {
-    flex: 1;
     border: none;
     border-radius: 999px;
     padding: 14px 20px;
@@ -202,6 +202,7 @@
 .btn-buy {
     background-color: #ff8914;
     color: #fff;
+    width: 180px;
 }
 
 .btn-buy:hover {
@@ -271,7 +272,7 @@
 
 .related-list {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: stretch;
     flex-wrap: wrap;
     gap: 20px;

@@ -5,84 +5,100 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
-use Database\Seeders\Support\SeedImage;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        // Đảm bảo thư mục images tồn tại trên disk public
-        Storage::disk('public')->makeDirectory('images');
 
-        // Tạo categories (nếu chưa có)
+        Storage::disk('public')->makeDirectory('products');
+
+
         $catCoffee   = Category::firstOrCreate(['NameCategory' => 'Cà phê']);
         $catSmoothie = Category::firstOrCreate(['NameCategory' => 'Sinh tố']);
         $catCake     = Category::firstOrCreate(['NameCategory' => 'Bánh']);
 
-        $pool = ['banhmi.svg', 'san_pham.jpg', 'capheden.svg', 'sinhto.svg'];
 
-        // Helper chọn ảnh bất kỳ
+        $pool = ['banhmi.svg', 'san_pham.jpg', 'capheden.svg', 'sinhto.svg'];
         $pick = fn() => $pool[array_rand($pool)];
 
-        // ===== Cà phê (có size) =====
-        $coffeeNames = ['Cà phê đen', 'Cà phê sữa', 'Bạc xỉu', 'Cold brew', 'Americano', 'Latte', 'Cappuccino'];
-        foreach ($coffeeNames as $name) {
-            Product::firstOrCreate(
-                ['NameProduct' => $name],
-                [
-                    'MainImage'  => SeedImage::put($pick()),
-                    'Description' => 'Mô tả ' . $name,
-                    'CategoryId' => $catCoffee->idCategory,
-                    'Price'      => null,              // CÓ size => để null
-                    'Status'     => 'Available',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
-        }
 
-        // ===== Sinh tố (không size) =====
+        $coffeeNames = ['Cà phê đen', 'Cà phê sữa', 'Bạc xỉu', 'Cold brew', 'Americano', 'Latte', 'Cappuccino'];
+        $coffeeName  = $coffeeNames[array_rand($coffeeNames)];
+
+        Product::firstOrCreate(
+            ['NameProduct' => $coffeeName],
+            [
+                'MainImage'   => self::copySeedImage($pick(), $coffeeName),
+                'Description' => 'Mô tả ' . $coffeeName,
+                'CategoryId'  => $catCoffee->idCategory,
+                'Price'       => null,
+                'Status'      => 'Available',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]
+        );
+
         $smoothies = [
             ['Sinh tố Matcha', 50000],
             ['Sinh tố Xoài',   45000],
             ['Sinh tố Dâu',    45000],
             ['Sinh tố Bơ',     55000],
         ];
-        foreach ($smoothies as [$name, $price]) {
-            Product::firstOrCreate(
-                ['NameProduct' => $name],
-                [
-                    'MainImage'  => SeedImage::put($pick()),
-                    'Description' => 'Mô tả ' . $name,
-                    'CategoryId' => $catSmoothie->idCategory,
-                    'Price'      => $price,            // KHÔNG size => đặt giá ở cột Product.Price
-                    'Status'     => 'Available',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
-        }
+        [$smoothieName, $smoothiePrice] = $smoothies[array_rand($smoothies)];
 
-        // ===== Bánh (không size) =====
+        Product::firstOrCreate(
+            ['NameProduct' => $smoothieName],
+            [
+                'MainImage'   => self::copySeedImage($pick(), $smoothieName),
+                'Description' => 'Mô tả ' . $smoothieName,
+                'CategoryId'  => $catSmoothie->idCategory,
+                'Price'       => $smoothiePrice,
+                'Status'      => 'Available',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]
+        );
+
         $cakes = [
-            ['Bánh mì',     30000],
-            ['Tiramisu',    45000],
+            ['Bánh mì',      30000],
+            ['Tiramisu',     45000],
             ['Bánh phô mai', 49000],
         ];
-        foreach ($cakes as [$name, $price]) {
-            Product::firstOrCreate(
-                ['NameProduct' => $name],
-                [
-                    'MainImage'  => SeedImage::put($pick()),
-                    'Description' => 'Mô tả ' . $name,
-                    'CategoryId' => $catCake->idCategory,
-                    'Price'      => $price,
-                    'Status'     => 'Available',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            );
+        [$cakeName, $cakePrice] = $cakes[array_rand($cakes)];
+
+        Product::firstOrCreate(
+            ['NameProduct' => $cakeName],
+            [
+                'MainImage'   => self::copySeedImage($pick(), $cakeName),
+                'Description' => 'Mô tả ' . $cakeName,
+                'CategoryId'  => $catCake->idCategory,
+                'Price'       => $cakePrice,
+                'Status'      => 'Available',
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ]
+        );
+    }
+    private static function copySeedImage(string $sourceFilename, ?string $nameHint = null): string
+    {
+        $src = public_path('images/products/' . $sourceFilename);
+        if (! File::exists($src)) {
+            throw new \RuntimeException("Seed image not found: {$src}");
         }
+
+        $ext   = pathinfo($sourceFilename, PATHINFO_EXTENSION);
+        $base  = pathinfo($sourceFilename, PATHINFO_FILENAME);
+        $hint  = $nameHint ? Str::slug($nameHint, '_') : $base;
+        $rnd   = Str::lower(Str::random(8));
+        $file  = "{$base}_{$hint}_{$rnd}.{$ext}";
+        $dest  = 'products/' . $file;
+
+        File::copy($src, Storage::disk('public')->path($dest));
+
+        return $dest;
     }
 }
