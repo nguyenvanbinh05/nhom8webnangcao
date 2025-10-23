@@ -39,16 +39,16 @@
                         <div class="menu-products">
                             @forelse ($items as $product)
                                 @php
-                                    // Có ít nhất một bản ghi Size != null?
+
                                     $hasLabeled = $product->sizes->whereNotNull('Size')->isNotEmpty();
-                                    // Giá nhỏ nhất từ bảng product_sizes (nếu có)
+
                                     $minSize = $product->sizes->sortBy('Price')->first();
-                                    // Fallback: nếu không có bản ghi size thì dùng cột Product.Price
+
                                     $displayPrice = $minSize->Price ?? $product->Price;
                                 @endphp
 
                                 <div class="menu-card">
-                                    <!-- Thân thẻ (link sang chi tiết) -->
+
                                     <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card-link"
                                         aria-label="Xem chi tiết">
                                         <div class="menu-card-img">

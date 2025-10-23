@@ -70,19 +70,18 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
-        // (Breeze chuẩn) bắt buộc verify email: KHÔNG logout, chuyển tới trang verify
+
         if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail()) {
-            // gửi luôn email 1 lần
             $user->sendEmailVerificationNotification();
             return redirect()
                 ->route('verification.notice')
                 ->with('status', 'verification-link-sent');
         }
 
-        // GỘP giỏ hàng khách -> giỏ hàng user (nếu có cookie)
+
         $this->mergeGuestCart($request, $user);
 
-        // Redirect theo vai trò
+
         return redirect()->intended(match ($user->role) {
             'admin', 'staff' => '/admin',
             default          => '/',

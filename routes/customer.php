@@ -17,7 +17,6 @@ Route::post('/cart/update',   [CartController::class, 'update'])->name('cart.upd
 Route::post('/cart/remove',   [CartController::class, 'remove'])->name('cart.remove');
 
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\OrderHistoryController;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -28,8 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 use App\Http\Controllers\AccountController;
 
 Route::middleware(['auth', 'verified'])->prefix('account')->name('account.')->group(function () {
-    Route::get('/',               [AccountController::class, 'overview'])->name('overview');   // Thông tin tài khoản
-    Route::get('/orders',         [AccountController::class, 'orders'])->name('orders');       // Danh sách đơn
+    Route::get('/',               [AccountController::class, 'overview'])->name('overview');
+    Route::get('/orders',         [AccountController::class, 'orders'])->name('orders');
     Route::get('/orders/{order:idOrder}', [AccountController::class, 'orderShow'])->name('orders.show');
     Route::get('/password',       [AccountController::class, 'passwordForm'])->name('password.form');
     Route::put('/password',      [AccountController::class, 'passwordUpdate'])->name('password.update');

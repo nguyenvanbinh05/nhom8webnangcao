@@ -22,7 +22,6 @@ class CheckoutController extends Controller
             'items.product' => fn($q) => $q->select('idProduct', 'NameProduct', 'MainImage', 'Status')
         ]);
 
-        // (khuyến nghị) bỏ các item hết hàng
         $items = $cart->items->filter(fn($i) => $i->product && $i->product->Status !== 'Stopped');
 
         if ($items->isEmpty()) {
@@ -84,7 +83,6 @@ class CheckoutController extends Controller
         $discount = 0;
         $total    = $subtotal + $shipping - $discount;
 
-        // Tạo đơn + items trong 1 transaction
         $order = DB::transaction(function () use ($items, $data, $subtotal, $shipping, $discount, $total) {
             $order = Order::create([
                 'user_id'        => Auth::id(),
@@ -118,7 +116,6 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // Xoá giỏ
             Cart::firstOrCreate(['user_id' => Auth::id()])->items()->delete();
 
             return $order;

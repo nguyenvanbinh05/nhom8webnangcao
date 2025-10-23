@@ -37,7 +37,7 @@
                     @error('email') <small class="text-error">{{ $message }}</small> @enderror
                 </div>
 
-                <div>
+                <div class="address-select">
                     <select class="form-select form-select-sm mb-3" id="city" aria-label=".form-select-sm" required>
                         <option value="" selected>Chọn tỉnh thành</option>
                     </select>
@@ -81,10 +81,8 @@
                 </div>
 
                 <input type="hidden" name="full_address" id="full_address" value="{{ old('full_address') }}">
-                {{-- LƯU Ý: Không để nút hành động ở đây nữa --}}
             </form>
 
-            {{-- RIGHT: SUMMARY --}}
             <aside class="checkout-summary">
                 <ul class="cart-list">
                     @foreach ($items as $it)
@@ -115,9 +113,7 @@
                         <span class="grand-price">{{ number_format($total, 0, ',', '.') }}đ</span>
                     </div>
                 </div>
-
-                {{-- ACTIONS: chuyển xuống DƯỚI TỔNG TIỀN --}}
-                <div class="actions" style="margin-top:12px">
+                <div class="actions">
                     <a class="btn-outline" href="{{ route('cart.index') }}">&lt; Giỏ hàng</a>
                     <button id="place-order" class="btn-primary" type="button">Thanh toán</button>
                 </div>
@@ -144,7 +140,6 @@
             const fullAddress = document.getElementById('full_address');
             const form = document.getElementById('checkout-form');
 
-            // Nút "Thanh toán" ở cột phải -> submit form bên trái (giữ validation)
             document.getElementById('place-order').addEventListener('click', function () {
                 // Ghép địa chỉ trước khi submit
                 if (!addressDetail.value.trim() || !cityName.value || !districtName.value || !wardName.value) {

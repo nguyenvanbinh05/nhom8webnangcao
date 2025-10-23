@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // return redirect(route('home', absolute: false));
+
         return redirect()->route('verification.notice')
             ->with('status', 'Chúng tôi đã gửi liên kết xác minh tới email của bạn. Vui lòng xác minh trước khi đăng nhập.');
     }

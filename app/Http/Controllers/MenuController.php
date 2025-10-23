@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
-    // /menu: tất cả + tìm kiếm
     public function index(Request $request)
     {
         $search = trim((string) $request->query('q'));
@@ -26,7 +25,6 @@ class MenuController extends Controller
             ->orderBy('NameProduct')
             ->get();
 
-        // Nhóm theo tên danh mục khi ở "Tất cả"
         $grouped = $products->groupBy(fn($p) => optional($p->category)->NameCategory ?? 'Khác');
 
         return view('customer.menu', [

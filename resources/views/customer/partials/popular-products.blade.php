@@ -81,40 +81,32 @@
             slider.addEventListener("mouseup", onMouseUpLeave);
             slider.addEventListener("mouseleave", onMouseUpLeave);
 
-            // ===== Wheel behavior =====
-            // Mục tiêu:
-            // - Desktop: để cuộn dọc TRANG bình thường. Chỉ cuộn ngang khi người dùng
-            //   + thật sự cuộn ngang (deltaX lớn hơn), hoặc
-            //   + giữ Shift rồi lăn (tuỳ chọn).
-            // - Mobile (<=992): không làm gì (grid 2 cột).
+
             function onWheel(e) {
-                if (!isDesktop()) return; // grid mode: để trình duyệt xử lý mặc định
+                if (!isDesktop()) return;
 
                 const absX = Math.abs(e.deltaX);
                 const absY = Math.abs(e.deltaY);
 
-                // Nếu người dùng đang lăn DỌC (thường xuyên nhất) => để trang cuộn, KHÔNG preventDefault.
+
                 if (absY >= absX && !e.shiftKey) {
-                    return; // do nothing -> page scrolls vertically as normal
+                    return;
                 }
 
-                // Trường hợp muốn hỗ trợ cuộn NGANG:
-                // 1) Trackpad cuộn ngang thật sự (absX > absY), hoặc
-                // 2) Người dùng giữ Shift + lăn
+
                 if (absX > absY || e.shiftKey) {
-                    e.preventDefault(); // cần passive:false khi addEventListener
+                    e.preventDefault();
                     const delta = absX > absY ? e.deltaX : e.deltaY;
                     slider.scrollLeft += delta;
                 }
             }
             slider.addEventListener("wheel", onWheel, { passive: false });
 
-            // ===== Resize guard: khi chuyển về desktop/mobile thì reset state =====
             function onResize() {
                 if (isDesktop()) {
-                    // desktop: nothing; để slider hoạt động
+
                 } else {
-                    // mobile/tablet: đảm bảo không còn trạng thái kéo
+
                     isDown = false;
                     slider.classList.remove("dragging");
                 }

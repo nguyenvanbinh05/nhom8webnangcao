@@ -59,12 +59,49 @@
     outline: none;
     color: #333;
     background: #fff;
+    resize: vertical;
 }
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(255, 137, 20, 0.15);
+}
+.address-select .form-select {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #1f2937;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+}
+
+.address-select .form-select:hover {
+    border-color: #dddfe3;
+}
+.address-select .form-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255, 137, 20, 0.15);
+    outline: none;
+}
+
+.address-select .form-select:required:invalid {
+    color: #9ca3af;
+    background-color: #fff;
+}
+
+/* disabled */
+.address-select .form-select:disabled {
+    background-color: #f9fafb;
+    color: #9ca3af;
+    border-color: #ececec;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.address-select .form-select + .form-select {
+    margin-top: 12px;
 }
 
 /* Payment */
@@ -93,7 +130,8 @@
 .actions {
     display: flex;
     gap: 14px;
-    margin-top: 18px;
+    margin-top: 30px;
+    justify-content: space-between;
 }
 .btn-primary {
     background: var(--accent);

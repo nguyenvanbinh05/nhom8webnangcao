@@ -9,7 +9,6 @@ class Ingredient extends Model
 {
     use HasFactory;
 
-    // Cho phép gán hàng loạt
     protected $fillable = [
         'name',
         'quantity',
