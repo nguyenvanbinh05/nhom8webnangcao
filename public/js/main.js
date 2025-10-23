@@ -22,52 +22,65 @@ if (sidebarItemDropdown.length > 0) {
 }
 
 
-// ================== FORM ADD/EDIT ==================
-const buttonAddForm = document.querySelector(".buttonAddForm");
-const buttonEditForm = document.querySelectorAll(".buttonEditForm");
+// // ================== FORM ADD/EDIT ==================
 const formInput = document.querySelector(".formInput");
-const formUpdate = document.querySelector(".formUpdate");
 const btnCloseForm = document.querySelectorAll(".btnCloseForm");
-const formUpdateCategory = document.getElementById('categoryupdateForm');
+const buttonAddForm = document.querySelector(".buttonAddForm");
+// const buttonEditForm = document.querySelectorAll(".buttonEditForm");
+// const formUpdate = document.querySelector(".formUpdate");
+// const formUpdateCategory = document.getElementById('categoryupdateForm');
 
-if (buttonAddForm && formInput) {
+if (formInput) {
     buttonAddForm.addEventListener("click", function (e) {
         e.preventDefault();
         formInput.classList.add('active');
     });
 }
 
-if (buttonEditForm.length > 0 && formUpdate) {
-    buttonEditForm.forEach(btn => {
-        btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const id = this.dataset.id; // data-id="{{ $category->idCategory }}"
-            const name = this.dataset.name; // data-name="{{ $category->NameCategory }}"
-            const desc = this.dataset.desc; // data-desc="{{ $category->description }}"
-            const status = this.dataset.status; // data-status="{{ $category->Status }}"
-
-            // Điền dữ liệu vào form
-            document.getElementById('editNameCategory').value = name;
-            document.getElementById('editdescription').value = desc;
-            document.getElementById('editstatus').value = status;
-
-            formUpdateCategory.action = routeUpdateTemplate.replace(':id', id);
-
-            // Hiển thị form
-            formUpdate.classList.add("active");
-        });
-    });
-}
-
+// Đóng form
 if (btnCloseForm.length > 0) {
     btnCloseForm.forEach(btn => {
-        btn.addEventListener("click", function (e) {
-            e.preventDefault();
-            formInput?.classList.remove("active");
-            formUpdate?.classList.remove("active");
+        btn.addEventListener('click', function() {
+            // Tìm phần tử cha gần nhất có class 'formInput' hoặc 'formUpdate'
+            const formContainer = this.closest('.formInput') || this.closest('.formUpdate');
+            if (formContainer) {
+                formContainer.classList.remove('active'); // Ẩn form
+            }
         });
     });
 }
+
+// if (buttonEditForm.length > 0 && formUpdate) {
+//     buttonEditForm.forEach(btn => {
+//         btn.addEventListener("click", function (e) {
+//             e.preventDefault();
+//             const id = this.dataset.id; 
+//             const name = this.dataset.name;
+//             const desc = this.dataset.desc; 
+//             const status = this.dataset.status; 
+
+//             // Điền dữ liệu vào form
+//             document.getElementById('editNameCategory').value = name;
+//             document.getElementById('editdescription').value = desc;
+//             document.getElementById('editstatus').value = status;
+
+//             formUpdateCategory.action = routeUpdateTemplate.replace(':id', id);
+
+//             // Hiển thị form
+//             formUpdate.classList.add("active");
+//         });
+//     });
+// }
+
+// if (btnCloseForm.length > 0) {
+//     btnCloseForm.forEach(btn => {
+//         btn.addEventListener("click", function (e) {
+//             e.preventDefault();
+//             formInput?.classList.remove("active");
+//             formUpdate?.classList.remove("active");
+//         });
+//     });
+// }
 
 
 // ================== ẢNH CHÍNH SẢN PHẨM ==================

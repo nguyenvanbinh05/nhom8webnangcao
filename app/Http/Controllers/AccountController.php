@@ -23,7 +23,7 @@ class AccountController extends Controller
         $customers = User::where('role', 'customer')->get();
 
         // Truyền dữ liệu sang view
-        return view('admin.accountManagement', compact('admins', 'staffs', 'customers'));
+        return view('admin.accountViews.accountManagement', compact('admins', 'staffs', 'customers'));
     }
     public function overview(Request $request)
     {
@@ -74,7 +74,25 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'     => 'required|string|max:100',
+            'email'    => 'required|email|unique:users,email',
+            'phone'    => 'nullable|string|max:15',
+            'password' => 'required|min:8|confirmed',
+            'role'     => 'required|in:admin,staff,customer',
+            'status'   => 'required|in:active,inactive',
+        ]);
+
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'password' => Hash::make($request->password),
+            'role'     => $request->role,
+            'status'   => $request->status,
+        ]);
+
+        return redirect()->route('accounts.index')->with('success', 'Tạo tài khoản thành công!');
     }
 
     /**
@@ -90,7 +108,12 @@ class AccountController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->route('accounts.index')->with('error', 'Tài khoản không tồn tại!');
+        }
+
+        return view('admin.accountViews.accountEdit', compact('user'));
     }
 
     /**
@@ -98,7 +121,33 @@ class AccountController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->route('accounts.index')->with('error', 'Tài khoản không tồn tại!');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:15',
+            'password' => 'nullable|min:6|confirmed',
+            'role' => 'required|in:admin,staff,customer',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->role = $request->role;
+        $user->status = $request->status;
+
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('accounts.index')->with('success', 'Cập nhật tài khoản thành công!');
     }
 
     /**

@@ -1,6 +1,6 @@
 @extends('layouts.layout_management')
 @section('content')
-<div class="container">
+<div class="content__body">
     <h1>Thêm sản phẩm mới</h1>
 
     @if ($errors->any())
@@ -17,7 +17,7 @@
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('adminProduct.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="product-form__group">
             <div class="product-form__field">

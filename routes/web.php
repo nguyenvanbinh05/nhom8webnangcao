@@ -50,7 +50,7 @@ Route::prefix('admin')->group(function () {
         route::resource('/accounts', AccountController::class);
         require __DIR__ . '/supplier.php';
         require __DIR__ . '/ingredient.php';
-        require __DIR__ . '/product.php';
+        require __DIR__ . '/adminProduct.php';
         require __DIR__ . '/category.php';
     });
 });
