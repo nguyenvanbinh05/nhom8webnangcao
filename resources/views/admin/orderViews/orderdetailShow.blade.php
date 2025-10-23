@@ -64,7 +64,7 @@
         </div>
 
         <div class="invoice-footer">
-            <a href="{{ route('orderManagement.index') }}" class="close-btn">Đóng</a>
+            <a href="{{ route('orderManagement.index') }}" class="product-form__button product-form__button--cancel" id="closeOrderDetailShow">Đóng</a>
             @if($order->status === 'Pending')
             <form action="{{ route('orderManagement.confirm', $order->idOrder) }}" method="POST">
                 @csrf

@@ -51,7 +51,7 @@
                     <a href="{{ route('orderManagement.show', $order->idOrder) }}" class="actions__btn">
                         <i class="fa-regular fa-eye actions__icon"></i>
                     </a>
-                    @if($order->status != "Completed" && $order->status != "Pending")
+                    @if($order->status != "Completed" && $order->status != "Pending && $order->status != "Cancelled")
                     <form action="{{ route('orderManagement.confirm', $order->idOrder) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn chuyển trạng thái đơn hàng sang thành công không?')">
                         @csrf
                         <button type="submit" class="btn btn-success">Câp nhật trạng thái</button>

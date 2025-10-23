@@ -84,8 +84,8 @@
             @endif
 
             <div class="apd-action-buttons">
-                <a href="{{ route('adminProduct.index') }}" class="apd-btn apd-btn-back">← Quay lại</a>
-                <a href="{{ route('adminProduct.edit', $product->idProduct) }}" class="apd-btn apd-btn-edit">✎ Sửa sản phẩm</a>
+                <a href="{{ route('adminProduct.index') }}" class="product-form__button product-form__button--cancel">Đóng</a>
+                <a href="{{ route('adminProduct.index', $product->idProduct) }}" class="product-form__button product-form__button--save">Sửa sản phẩm</a>
             </div>
         </div>
     </div>
