@@ -12,7 +12,7 @@
                 </svg>
             </button>
             <ul class="account-menu">
-                <li><a href="{{ route('profile.edit') }}">Tài khoản</a></li>
+                <!-- <li><a href="{{ route('profile.edit') }}">Tài khoản</a></li> -->
                 <li class="separator"></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
