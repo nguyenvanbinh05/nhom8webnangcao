@@ -50,5 +50,6 @@ Route::prefix('admin')->group(function () {
         require __DIR__ . '/ingredient.php';
         require __DIR__ . '/adminProduct.php';
         require __DIR__ . '/category.php';
+        require __DIR__ . '/orderManagement.php';
     });
 });
