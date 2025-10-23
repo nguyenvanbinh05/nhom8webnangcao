@@ -1,0 +1,251 @@
+.account-wrap {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    padding: 60px 0;
+}
+
+.account-sidebar {
+    border-right: 1px solid #bebebe;
+    padding-right: 16px;
+    position: sticky;
+    top: 120px;
+    height: fit-content;
+}
+
+.account-sidebar h3 {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    color: #ff8914;
+}
+.account-sidebar p {
+    padding-bottom: 20px;
+    border-bottom: #bebebe solid 1px;
+}
+.account-sidebar a {
+    display: block;
+    padding: 8px 0;
+    color: #000000;
+    text-decoration: none;
+}
+
+.account-sidebar a.active {
+    color: #ff8914;
+    font-weight: 600;
+}
+
+.account-content {
+    min-height: 320px;
+}
+/* ======== over view============= */
+.p {
+    padding: 10px 0;
+}
+.muted {
+    color: #666;
+}
+/* ======= đơn hàng */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #f2f2f2;
+    font-size: 12px;
+}
+
+.badge.success {
+    background: #eafaf1;
+    color: #2e7d32;
+}
+.badge.cancelled {
+    background: #ffd1c9;
+    color: #ff0000;
+}
+.badge.warn {
+    background: #a3b9ff;
+    color: #140280;
+}
+.badge.shipping {
+    background: #fff7e6;
+    color: #ad6800;
+}
+/* chiu tiết đơn hàng */
+.order-detail .title {
+    margin: 0 0 10px;
+    color: #9b5d00;
+}
+.order-detail .status {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin: 30px 0;
+}
+.order-detail .day-of-destroy {
+    font-weight: 600;
+    margin: 6px 0 14px;
+}
+.order-detail .infor {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 12px 0 18px;
+}
+.order-detail .infor .adress,
+.order-detail .infor .payment-method,
+.order-detail .infor .note {
+    border: 1px solid #bebebe;
+    border-radius: 8px;
+    padding: 14px;
+}
+.order-detail .infor .adress #title,
+.order-detail .infor .payment-method #title,
+.order-detail .infor .note #title {
+    color: #2201e0;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.order-detail .product-list {
+    border: 1px solid #bebebe;
+    border-radius: 10px;
+    overflow: hidden;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+table.table-title {
+    border-bottom: 1px solid #bebebe;
+}
+table .info-product {
+    border-top: 1px solid #bebebe;
+}
+.totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+    margin-right: 30px;
+}
+.totals #totals {
+    color: #f33100;
+    font-weight: 800;
+    font-size: 18px;
+}
+/* ====đổi mk====== */
+:root {
+    --accent: #ff8914;
+    --border: #bebebe;
+    --text: #1f2937;
+    --muted: #6b7280;
+}
+
+.change-password {
+    max-width: 760px;
+    padding: 0;
+    color: var(--text);
+}
+
+.change-password .title-page {
+    margin: 0 0 18px;
+    padding-left: 16px;
+    border-left: 3px solid var(--border);
+}
+.change-password .title {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 800;
+}
+.change-password .title-desc {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.change-password .input-fields {
+    display: grid;
+    gap: 14px;
+}
+
+.change-password label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+.change-password label::after {
+    content: " *";
+    color: #db7500;
+    font-weight: 600;
+}
+
+.change-password .input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.change-password .input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.12);
+}
+
+.change-password .error {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #dc2626;
+}
+.change-password .status {
+    font-size: 13px;
+    color: #059669;
+    display: block;
+    background-color: #a5e9d3;
+    border-radius: 10px;
+    padding: 5px 0;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* hàng nút */
+.change-password .btn-change {
+    margin-top: 4px;
+}
+
+/* nút đỏ đơn giản như ảnh */
+.change-password .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: filter 0.15s, opacity 0.15s;
+}
+.change-password .btn:hover {
+    filter: brightness(0.98);
+}
+.change-password .btn:active {
+    filter: brightness(0.95);
+}
+.change-password .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

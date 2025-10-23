@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,15 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('cartCount', $count);
+        });
+        VerifyEmail::toMailUsing(function ($notifiable, string $url) {
+            return (new MailMessage)
+                ->subject('Xác minh địa chỉ email')
+                ->greeting('Xin chào ' . ($notifiable->name ?? 'bạn') . ' 👋')
+                ->line('Cảm ơn bạn đã đăng ký Coffee Shop.')
+                ->line('Nhấn nút bên dưới để xác minh địa chỉ email của bạn.')
+                ->action('Xác minh email', $url)
+                ->line('Nếu bạn không tạo tài khoản, vui lòng bỏ qua email này.');
         });
     }
 }

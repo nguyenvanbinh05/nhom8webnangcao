@@ -14,21 +14,21 @@ class ProductController extends Controller
             'additationImages:idAdditationImage,AdditationLink,ProductId',
         ])->where('idProduct', $idProduct)->firstOrFail();
 
-        // Ảnh: ảnh chính + ảnh phụ (theo đúng thứ tự bạn muốn)
+
         $thumbs = collect()
             ->when($product->MainImage, fn($c) => $c->push($product->MainImage))
             ->merge($product->additationImages->pluck('AdditationLink'))
             ->values();
 
-        // Size: mặc định = giá nhỏ nhất
+
         $sizesSorted  = $product->sizes->sortBy('Price')->values();
-        $defaultSize  = $sizesSorted->first();               // có thể là size NULL nếu bạn seed kiểu không-size
-        $hasLabeled   = $product->sizes->whereNotNull('Size')->isNotEmpty(); // chỉ hiện khu chọn size khi có S/M/L
+        $defaultSize  = $sizesSorted->first();
+        $hasLabeled   = $product->sizes->whereNotNull('Size')->isNotEmpty();
         $currentPrice = $defaultSize?->Price
-            ?? $product->Price      // ⬅️ fallback từ cột Price trên Product
+            ?? $product->Price
             ?? null;
 
-        // Sản phẩm liên quan (tuỳ chọn)
+
         $related = Product::with('sizes:idProductSize,Size,Price,ProductId')
             ->where('CategoryId', $product->CategoryId)
             ->where('idProduct', '!=', $product->idProduct)

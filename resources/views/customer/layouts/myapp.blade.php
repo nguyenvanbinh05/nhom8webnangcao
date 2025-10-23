@@ -12,7 +12,7 @@
     <title>@yield('title', 'Coffee Shop')</title>
 </head>
 
-<body>
+<body class="site">
     @include('customer.partials.header')
     <div class="container">
         @yield('content')
@@ -28,6 +28,5 @@
     <script src="{{ asset('js/cart-ajax.js') }}"></script>
     @stack('scripts')
 </body>
-
 
 </html>

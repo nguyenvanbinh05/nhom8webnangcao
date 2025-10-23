@@ -52,16 +52,18 @@
 }
 
 /* ===== LABEL ===== */
-x-input-label,
+
 .form-label,
 label {
     display: block;
     font-weight: 500;
     color: var(--text-dark);
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     margin-bottom: 4px;
 }
-
+.mb-4 {
+    margin-bottom: 10px;
+}
 /* ===== INPUT ===== */
 input[type="text"],
 input[type="email"],
@@ -72,7 +74,7 @@ input[type="tel"] {
     border: 1px solid var(--border);
     border-radius: 8px;
     background: #fff;
-    font-size: 1rem;
+    font-size: 1.6rem;
     color: var(--text-dark);
     transition: all 0.25s ease;
 }
@@ -93,7 +95,7 @@ button[type="submit"],
     background: #fff;
     border: 2px solid var(--accent);
     color: var(--accent);
-    font-size: 1rem;
+    font-size: 1.6rem;
     font-weight: 700;
     text-align: center;
     cursor: pointer;
@@ -107,10 +109,9 @@ button[type="submit"],
 }
 
 /* ===== LỖI ===== */
-.x-input-error,
-.form-error {
+.error {
     color: #d33;
-    font-size: 0.85rem;
+    font-size: 1.6rem;
     margin-top: 4px;
 }
 

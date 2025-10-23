@@ -16,10 +16,8 @@ class CartController extends Controller
     protected function resolveCart(Request $request): Cart
     {
         if (Auth::check()) {
-            // giỏ theo user
             $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
-            // nếu còn cookie giỏ của khách -> gộp
             if ($token = $request->cookie('cart_token')) {
                 $guest = Cart::with('items')->where('cart_token', $token)->first();
                 if ($guest) {
@@ -30,7 +28,6 @@ class CartController extends Controller
             return $cart->load('items.product');
         }
 
-        // khách: dùng cookie cart_token
         $token = $request->cookie('cart_token');
         if (!$token) {
             $token = (string) Str::uuid();
@@ -70,7 +67,7 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $cart  = $this->resolveCart($request);
-        $items = $cart->items; // đã load product
+        $items = $cart->items;
 
         return view('customer.cart', [
             'items' => $items,
@@ -94,7 +91,6 @@ class CartController extends Controller
         $hasLabeled = $product->sizes->whereNotNull('Size')->isNotEmpty();
         $size       = $data['size'] ?? null;
 
-        // Nếu có size bắt buộc mà client không gửi → yêu cầu sang chi tiết
         if ($hasLabeled && !$size) {
             $detail = route('product.show', $product->idProduct);
             if ($request->expectsJson() || $request->ajax()) {
@@ -103,7 +99,6 @@ class CartController extends Controller
             return redirect()->to($detail);
         }
 
-        // CHỌN GIÁ
         $priceRow = null;
         if ($size) {
             $priceRow = $product->sizes->firstWhere('Size', $size);
@@ -138,13 +133,12 @@ class CartController extends Controller
         } else {
             $cart->items()->create([
                 'product_id' => $product->idProduct,
-                'size'       => $priceRow->Size,                 // có thể null
+                'size'       => $priceRow->Size,
                 'price'      => (int) round($priceRow->Price),
                 'quantity'   => $qty,
             ]);
         }
 
-        // Tính lại tổng
         $items     = $cart->items()->get();
         $cartTotal = $items->sum(fn($i) => $i->price * $i->quantity);
         $cartCount = $items->sum('quantity');

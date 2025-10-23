@@ -39,16 +39,16 @@
                         <div class="menu-products">
                             @forelse ($items as $product)
                                 @php
-                                    // Có ít nhất một bản ghi Size != null?
+
                                     $hasLabeled = $product->sizes->whereNotNull('Size')->isNotEmpty();
-                                    // Giá nhỏ nhất từ bảng product_sizes (nếu có)
+
                                     $minSize = $product->sizes->sortBy('Price')->first();
-                                    // Fallback: nếu không có bản ghi size thì dùng cột Product.Price
+
                                     $displayPrice = $minSize->Price ?? $product->Price;
                                 @endphp
 
                                 <div class="menu-card">
-                                    <!-- Thân thẻ (link sang chi tiết) -->
+
                                     <a href="{{ route('product.show', $product->idProduct) }}" class="menu-card-link"
                                         aria-label="Xem chi tiết">
                                         <div class="menu-card-img">
@@ -74,13 +74,11 @@
                                     <!-- Nút giỏ hàng -->
                                     @if($product->Status !== 'Stopped')
                                         @if(!$hasLabeled)
-                                            {{-- KHÔNG có size: thêm vào giỏ bằng AJAX --}}
                                             <button class="menu-card-cart" title="Thêm vào giỏ hàng" type="button"
                                                 data-product-id="{{ $product->idProduct }}">
                                                 <img src="{{ asset('images/icons/cart.svg') }}" alt="Thêm vào giỏ">
                                             </button>
                                         @else
-                                            {{-- CÓ size: đi đến trang chi tiết để chọn size --}}
                                             <a class="menu-card-cart" title="Chọn size"
                                                 href="{{ route('product.show', $product->idProduct) }}">
                                                 <img src="{{ asset('images/icons/cart.svg') }}" alt="Chọn size">

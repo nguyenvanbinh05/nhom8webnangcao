@@ -19,7 +19,6 @@
             <div class="contact-form">
                 <h4 class="form-title">Gửi tin nhắn trực tiếp cho chúng tôi</h4>
 
-                {{-- Alert đặt NGAY trong cột form để không đẩy layout --}}
                 <div id="contact-alert" class="contact-alert" hidden></div>
 
                 <form id="contact-form" action="{{ route('contact.send') }}" method="post" novalidate>

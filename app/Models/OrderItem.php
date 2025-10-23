@@ -25,9 +25,15 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class, 'order_id', 'idOrder');
     }
 
-    // (tuỳ chọn) nếu muốn truy về Product hiện tại:
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'idProduct');
+    }
+    public function getLineTotalAttribute($value)
+    {
+        if (!is_null($value)) {
+            return (int) $value;
+        }
+        return (int) $this->unit_price * (int) $this->quantity;
     }
 }
