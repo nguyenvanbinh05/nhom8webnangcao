@@ -4,20 +4,44 @@
 
 @section('content')
 
+
 <div class="content_body">
     <div class="content__header">
         <!-- Search -->
-        <!-- <div class="search">
-            <input type="text" class="search__input" placeholder="Tìm kiếm theo id, tên sản sản phẩm...">
-            <button class="search__btn">
-                <i class="fa-solid fa-magnifying-glass search__icon"></i>
-            </button>
-        </div> -->
-        <!-- Action buttons -->
-        <!-- <a href="{{ route('ingredients.create') }}" class="buttonAddForm">
-            <i class="fa-solid fa-plus"></i>
-            <span>Thêm mới</span>
-        </a> -->
+        <form action="{{ route('orderManagement.index') }}" method="GET">
+            <div class="search">
+                <input type="text"
+                    class="search__input"
+                    name="search"
+                    placeholder="Tìm kiếm theo id, tên sản phẩm..."
+                    value="{{ $search ?? '' }}">
+                <button type="submit" class="search__btn">
+                    <i class="fa-solid fa-magnifying-glass search__icon"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="status-bar">
+        <a href="{{ route('orderManagement.index') }}"
+            class="status-item {{ request('status') ? '' : 'active' }}">
+            Tất cả
+        </a>
+        <a href="{{ route('orderManagement.index', ['status' => 'Pending']) }}"
+            class="status-item {{ request('status') == 'Pending' ? 'active' : '' }}">
+            Chờ xác nhận
+        </a>
+        <a href="{{ route('orderManagement.index', ['status' => 'Processing']) }}"
+            class="status-item {{ request('status') == 'Processing' ? 'active' : '' }}">
+            Đang xử lý
+        </a>
+        <a href="{{ route('orderManagement.index', ['status' => 'Completed']) }}"
+            class="status-item {{ request('status') == 'Completed' ? 'active' : '' }}">
+            Thành công
+        </a>
+        <a href="{{ route('orderManagement.index', ['status' => 'Cancelled']) }}"
+            class="status-item {{ request('status') == 'Cancelled' ? 'active' : '' }}">
+            Đã hủy
+        </a>
     </div>
     <!-- table -->
     <table class="table">
@@ -42,21 +66,16 @@
                 <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                 <td>{{ number_format($order->total, 0, ',', '.') }} đ</td>
                 <td>
-                    <span class="status status--{{ strtolower($order->status) }}">
-                        {{ ucfirst($order->status) }}
+                    <span class="status status--{{ $order->status_color }}">
+                        {{ $order->status_label }}
                     </span>
                 </td>
                 <td>{{ $order->payment_method }}</td>
                 <td class="table__cell actions">
                     <a href="{{ route('orderManagement.show', $order->idOrder) }}" class="actions__btn">
-                        <i class="fa-regular fa-eye actions__icon"></i>
+                        <!-- <i class="fa-regular fa-eye actions__icon"></i> -->
+                        Chi tiết
                     </a>
-                    @if($order->status != "Completed" && $order->status != "Pending" && $order->status != "Cancelled")
-                    <form action="{{ route('orderManagement.confirm', $order->idOrder) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn chuyển trạng thái đơn hàng sang thành công không?')">
-                        @csrf
-                        <button type="submit" class="btn btn-success">Câp nhật trạng thái</button>
-                    </form>
-                    @endif
                 </td>
             </tr>
             @empty
@@ -67,5 +86,25 @@
         </tbody>
     </table>
 </div>
+<script>
+    const items = document.querySelectorAll('.status-item');
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            // Bỏ class active ở tất cả
+            items.forEach(i => i.classList.remove('active'));
+            // Thêm class active vào phần được chọn
+            item.classList.add('active');
+
+            // Lấy tên trạng thái (loại bỏ dấu cách thừa)
+            const status = item.textContent.trim();
+
+            // Chuyển hướng đến URL có ?status=<tên trạng thái>
+            const url = new URL(window.location.href);
+            url.searchParams.set('status', status);
+            window.location.href = url.toString();
+        });
+    });
+</script>
 
 @endsection

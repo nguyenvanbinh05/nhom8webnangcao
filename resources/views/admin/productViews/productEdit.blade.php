@@ -2,7 +2,19 @@
 @section('content')
 
 <div class="content__body">
-    <h1>Cập nhật sản phẩm</h1>
+    <h1 class="title">Cập nhật sản phẩm</h1>
+
+    <!-- Sau <h1>Cập nhật sản phẩm</h1> thêm khối thông báo lỗi -->
+    @if ($errors->any())
+    <div class="alert alert-danger" style="margin-bottom: 15px;">
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
 
     <form action="{{ route('adminProduct.update', $product->idProduct) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -19,23 +31,25 @@
 
         <!-- Ảnh chính -->
         <div class="product-form__field">
-            <label class="product-form__label"><span style="color: red">*</span> Ảnh chính</label>
+            <label class="product-form__label">Ảnh chính</label>
             <input type="file" id="mainImage" name="MainImage" accept="image/*">
-            @if($product->MainImage)
-            <img id="mainImagePreview" src="{{ asset('storage/' . $product->MainImage) }}" alt="Ảnh chính" style="max-width:200px; display:block; margin-top:10px;">
-            @else
-            <img id="mainImagePreview" alt="Xem trước ảnh chính" style="max-width:200px; display:none; margin-top:10px;">
-            @endif
+            <div style="margin-top:10px;">
+                <img id="mainImagePreview"
+                    src="{{ asset('storage/' . $product->MainImage) }}"
+                    style="max-width:150px; display:block;">
+            </div>
         </div>
 
         <!-- Ảnh phụ -->
         <div class="product-form__field" style="margin-top:20px">
             <label class="product-form__label">Ảnh phụ</label>
-            <input type="file" id="additionalImage" name="additationImages[]" accept="image/*" multiple>
+            <input type="file" id="additionalImage" name="additionalImages[]" accept="image/*" multiple>
             <div id="additionalImagesPreview" style="margin-top:10px;">
                 @if($product->additationImages && $product->additationImages->count())
                 @foreach($product->additationImages as $img)
-                <img src="{{ asset('storage/' . $img->AdditationLink) }}" style="max-width:100px; margin-right:5px;">
+                <img src="{{ asset('storage/' . $img->AdditationLink) }}"
+                    class="existing-additional"
+                    style="max-width:100px; margin-right:5px;">
                 @endforeach
                 @endif
             </div>
@@ -113,58 +127,12 @@
 
         <!-- Button Group -->
         <div class="product-form__button-group">
-            <button type="button" class="product-form__button product-form__button--cancel">Hủy</button>
+            <a href="{{ route('adminProduct.index') }}" class="product-form__button product-form__button--cancel">Hủy</a>
             <button type="submit" class="product-form__button product-form__button--save">Lưu</button>
         </div>
     </form>
 </div>
 
-<script>
-    const productType = document.getElementById('productType');
-    const singlePriceField = document.getElementById('singlePriceField');
-    const multipleSizeField = document.getElementById('multipleSizeField');
+<script src="{{ asset('js/product-form-handler.js') }}"></script>
 
-    productType.addEventListener('change', function() {
-        if (this.value === 'single') {
-            singlePriceField.style.display = 'block';
-            multipleSizeField.style.display = 'none';
-        } else if (this.value === 'multiple') {
-            singlePriceField.style.display = 'none';
-            multipleSizeField.style.display = 'block';
-        } else {
-            singlePriceField.style.display = 'none';
-            multipleSizeField.style.display = 'none';
-        }
-    });
-</script>
-
-
-<script>
-    // Preview ảnh chính
-    const mainImageInput = document.getElementById('mainImage');
-    const mainImagePreview = document.getElementById('mainImagePreview');
-
-    mainImageInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            mainImagePreview.src = URL.createObjectURL(file);
-            mainImagePreview.style.display = 'block';
-        }
-    });
-
-    // Preview ảnh phụ
-    const additionalImageInput = document.getElementById('additionalImage');
-    const additionalImagesPreview = document.getElementById('additionalImagesPreview');
-
-    additionalImageInput.addEventListener('change', function() {
-        additionalImagesPreview.innerHTML = '';
-        Array.from(this.files).forEach(file => {
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file);
-            img.style.maxWidth = '100px';
-            img.style.marginRight = '5px';
-            additionalImagesPreview.appendChild(img);
-        });
-    });
-</script>
 @endsection

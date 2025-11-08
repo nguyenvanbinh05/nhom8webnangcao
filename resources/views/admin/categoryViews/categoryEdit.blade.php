@@ -6,8 +6,13 @@
             <h2>Cập nhật thông tin</h2>
 
             <div class="form-group">
-                <label for="name">Tên danh mục <span style="color:red">*</span></label>
-                <input type="text" id="editNameCategory" name="nameCategory" class="form-control" required>
+                <label for="editNameCategory">Tên danh mục <span style="color:red">*</span></label>
+                <input type="text" id="editNameCategory" name="nameCategory" 
+                       class="form-control @error('nameCategory') is-invalid @enderror" 
+                       placeholder="Nhập tên danh mục">
+                @error('nameCategory')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="form-group">
@@ -49,8 +54,25 @@
             document.getElementById('editdescription').value = desc;
             document.getElementById('editstatus').value = status;
 
-            // Hiển thị form
+            form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+            form.querySelector('.form-control').classList.remove('is-invalid');
             document.querySelector('.formUpdate').classList.add("active");
         });
     });
+
+    document.querySelectorAll('.btnCloseForm').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Đóng form form
+            document.querySelector('.formUpdate').classList.remove("active");
+        });
+    });
 </script>
+
+@if ($errors->any())
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector('.formInput').classList.add("active");
+    });
+</script>
+@endif

@@ -1,24 +1,12 @@
 @extends('layouts.layout_management')
 @section('content')
+
 <div class="content__body">
-    <h1>Thêm sản phẩm mới</h1>
-
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
-
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <h1 class="title">Thêm sản phẩm mới</h1>
 
     <form action="{{ route('adminProduct.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+
         <div class="product-form__group">
             <div class="product-form__field">
                 <label class="product-form__label" for="productName"><span style="color: red">* </span>Tên sản phẩm</label>
@@ -29,31 +17,16 @@
 
         <div class="product-form__group">
             <div class="product-form__field">
-                <label class="product-form__label"><span style="color: red">* </span>Ảnh chính</label>
-                <div class="product-form__image-box" id="mainImageBox">
-                    <input class="product-form__file" type="file" id="mainImage" name="MainImage"
-                        accept="image/*">
-                    <div class="product-form__image-placeholder">
-                        <i class="fa-solid fa-cloud-arrow-up icon-uploadFile"></i>
-                        <span>+ Chọn ảnh</span>
-                    </div>
-                    <img id="mainImagePreview" class="product-form__image-preview"
-                        alt="Xem trước ảnh chính" style="display: none;">
-                </div>
+                <label class="product-form__label"><span style="color: red">*</span> Ảnh chính</label>
+                <input type="file" id="mainImage" name="MainImage" accept="image/*">
+                <img id="mainImagePreview" class="product-form__image-preview"
+                    alt="Xem trước ảnh chính" style="display: none;">
             </div>
 
             <div class="product-form__field">
                 <label class="product-form__label">Ảnh phụ</label>
-                <div class="product-form__additional-images">
-                    <input class="product-form__file" type="file" id="additionalImage"
-                        name="additationImages[]" accept="image/*" multiple>
-                    <div id="additionalImagesPreview" class="product-form__image-list">
-                        <div class="product-form__additional-action">
-                            <span>+</span>
-                            <span>Thêm ảnh</span>
-                        </div>
-                    </div>
-                </div>
+                <input class="product-form__file" type="file" id="additionalImage"
+                    name="additionalImages[]" accept="image/*" multiple>
             </div>
         </div>
 
@@ -61,7 +34,7 @@
             <div class="product-form__field">
                 <label class="product-form__label" for="brand"><span style="color: red">* </span>Loại sản phẩm</label>
                 <select class="product-form__input" id="brand" name="CategoryId">
-                    @foreach(App\Models\Category::all() as $category)
+                    @foreach($categories as $category)
                     <option value="{{ $category->idCategory }}">{{ $category->NameCategory }}</option>
                     @endforeach
                 </select>
@@ -120,29 +93,12 @@
 
         <!-- Button Group -->
         <div class="product-form__button-group">
-            <button type="button" class="product-form__button product-form__button--cancel">Hủy</button>
+            <a href="{{ route('adminProduct.index') }}" class="product-form__button product-form__button--cancel">Hủy</a>
             <button type="submit" class="product-form__button product-form__button--save">Lưu</button>
         </div>
     </form>
 </div>
 
-<script>
-    const productType = document.getElementById('productType');
-    const singlePriceField = document.getElementById('singlePriceField');
-    const multipleSizeField = document.getElementById('multipleSizeField');
-
-    productType.addEventListener('change', function() {
-        if (this.value === 'single') {
-            singlePriceField.style.display = 'block';
-            multipleSizeField.style.display = 'none';
-        } else if (this.value === 'multiple') {
-            singlePriceField.style.display = 'none';
-            multipleSizeField.style.display = 'block';
-        } else {
-            singlePriceField.style.display = 'none';
-            multipleSizeField.style.display = 'none';
-        }
-    });
-</script>
+<script src="{{ asset('js/product-form-handler.js') }}"></script>
 
 @endsection

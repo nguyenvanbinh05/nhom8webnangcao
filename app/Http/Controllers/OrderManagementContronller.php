@@ -10,11 +10,35 @@ class OrderManagementContronller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('user')->orderBy('created_at', 'desc')->get();
 
-        return view('admin.orderViews.orderManagement', compact('orders'));
+        $search = $request->input('search');
+        $status = $request->input('status');
+
+        // Tạo query cơ bản, kèm quan hệ user
+        $query = Order::with('user');
+
+        // Nếu có từ khóa tìm kiếm
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // Nếu có chọn trạng thái đơn hàng
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        // Lấy danh sách đơn hàng (sắp xếp theo ngày mới nhất)
+        $orders = $query->orderBy('created_at', 'desc')->get();
+
+        // Trả về view
+        return view('admin.orderViews.orderManagement', compact('orders', 'search', 'status'));
     }
 
     /**
@@ -82,8 +106,15 @@ class OrderManagementContronller extends Controller
             $order->save();
             return redirect()->route('orderManagement.index')->with('success', 'Cập nhật trạng thái thành công');
         }
-
-        // Nếu đã xác nhận rồi, có thể cho phép thay đổi trạng thái khác
-        return redirect()->route('orderManagement.index')->with('info', 'Đơn hàng đã được xác nhận trước đó. Bạn có thể cập nhật trạng thái khác.');
     }
+
+    public function cancel(Request $request, $idOrder)
+{
+    $order = Order::findOrFail($idOrder);
+    $order->status = 'Cancelled';
+    $order->cancel_reason = $request->input('cancel_reason');
+    $order->save();
+
+    return redirect()->back()->with('success', 'Đơn hàng đã được hủy!');
+}
 }

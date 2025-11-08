@@ -26,7 +26,7 @@
         </div>
 
         <div class="apd-right">
-            <h3 class="apd-product-name">{{ $product->NameProduct }}</h3>
+            <h3 class="apd-product-name">Sản phẩm: {{ $product->NameProduct }}</h3>
 
             <table class="apd-info-table">
                 <tr>
@@ -85,7 +85,7 @@
 
             <div class="apd-action-buttons">
                 <a href="{{ route('adminProduct.index') }}" class="product-form__button product-form__button--cancel">Đóng</a>
-                <a href="{{ route('adminProduct.index', $product->idProduct) }}" class="product-form__button product-form__button--save">Sửa sản phẩm</a>
+                <a href="{{ route('adminProduct.edit', $product->idProduct) }}" class="product-form__button product-form__button--save">Sửa sản phẩm</a>
             </div>
         </div>
     </div>
