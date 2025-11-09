@@ -61,8 +61,8 @@
                 </tr>
             </table>
 
-            <h4 class="apd-subtitle">Danh sách kích cỡ</h4>
             @if($product->sizes->count() > 0)
+            <h4 class="apd-subtitle">Danh sách kích cỡ</h4>
             <table class="apd-size-table">
                 <thead>
                     <tr>
@@ -79,8 +79,6 @@
                     @endforeach
                 </tbody>
             </table>
-            @else
-            <p>Không có kích cỡ nào.</p>
             @endif
 
             <div class="apd-action-buttons">

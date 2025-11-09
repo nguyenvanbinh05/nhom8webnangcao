@@ -1641,7 +1641,7 @@ td {
 }
 
 .status--processing {
-    background-color: #cce5ff;
+    background-color: var(--text-color_white);
     color: #fb8c00;
 }
 

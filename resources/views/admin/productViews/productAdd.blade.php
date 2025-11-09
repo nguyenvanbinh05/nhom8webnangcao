@@ -9,16 +9,22 @@
 
         <div class="product-form__group">
             <div class="product-form__field">
-                <label class="product-form__label" for="productName"><span style="color: red">* </span>Tên sản phẩm</label>
+                <label class="product-form__label" for="productName" required><span style="color: red">* </span>Tên sản phẩm</label>
                 <input class="product-form__input" type="text" id="productName" name="NameProduct"
                     placeholder="Nhập tên sản phẩm">
+                @error('NameProduct')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
         <div class="product-form__group">
             <div class="product-form__field">
-                <label class="product-form__label"><span style="color: red">*</span> Ảnh chính</label>
+                <label class="product-form__label" required><span style="color: red">*</span> Ảnh chính</label>
                 <input type="file" id="mainImage" name="MainImage" accept="image/*">
+                @error('MainImage')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <img id="mainImagePreview" class="product-form__image-preview"
                     alt="Xem trước ảnh chính" style="display: none;">
             </div>
@@ -32,12 +38,15 @@
 
         <div class="product-form__group">
             <div class="product-form__field">
-                <label class="product-form__label" for="brand"><span style="color: red">* </span>Loại sản phẩm</label>
+                <label class="product-form__label" for="brand"><span style="color: red" required>* </span>Loại sản phẩm</label>
                 <select class="product-form__input" id="brand" name="CategoryId">
                     @foreach($categories as $category)
                     <option value="{{ $category->idCategory }}">{{ $category->NameCategory }}</option>
                     @endforeach
                 </select>
+                @error('CategoryId')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
 
         </div>
@@ -54,7 +63,7 @@
 
         <!-- Giá cố định cho 1 size -->
         <div class="product-form__field" id="singlePriceField" style="display:none;">
-            <label class="product-form__label" for="price"><span style="color:red">*</span> Giá bán</label>
+            <label class="product-form__label" for="price" required><span style="color:red">*</span> Giá bán</label>
             <input class="product-form__input" type="number" id="price" name="Price" placeholder="Nhập giá bán">
         </div>
 

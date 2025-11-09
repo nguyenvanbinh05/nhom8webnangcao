@@ -98,23 +98,23 @@ class OrderManagementContronller extends Controller
         if ($order->status === 'Pending') {
             $order->status = 'Processing'; // chuyển sang processing
             $order->save();
-            return redirect()->route('orderManagement.index')->with('success', 'Đơn hàng đã được xác nhận!');
+            return redirect()->back()->with('success', 'Đơn hàng đã được xác nhận!');
         }
 
         if ($order->status === 'Processing') {
             $order->status = 'Completed'; // chuyển sang processing
             $order->save();
-            return redirect()->route('orderManagement.index')->with('success', 'Cập nhật trạng thái thành công');
+            return redirect()->back()->with('success', 'Cập nhật trạng thái thành công');
         }
     }
 
     public function cancel(Request $request, $idOrder)
-{
-    $order = Order::findOrFail($idOrder);
-    $order->status = 'Cancelled';
-    $order->cancel_reason = $request->input('cancel_reason');
-    $order->save();
+    {
+        $order = Order::findOrFail($idOrder);
+            $order->status = 'Cancelled';
+            $order->cancel_reason = $request->input('cancel_reason');
+            $order->save();
 
-    return redirect()->back()->with('success', 'Đơn hàng đã được hủy!');
-}
+            return redirect()->back()->with('success', 'Đơn hàng đã được hủy!');
+    }
 }

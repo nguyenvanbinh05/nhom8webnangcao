@@ -34,8 +34,8 @@
             </div>
             <div class="statusOrder">
                 <p><strong>Trạng Thái:</strong>
-                    <span class="status-{{ strtolower($order->status) }}">
-                        {{ ucfirst($order->status) }}
+                    <span class="status status--{{ $order->status_color }}">
+                        {{ $order->status_label }}
                     </span>
                 </p>
                 @if($order->status === 'Cancelled' && $order->cancel_reason)
@@ -75,14 +75,15 @@
 
         <div class="invoice-footer">
             @if($order->status === 'Pending')
+            <button type="button" class="btn btn-danger">Hủy đơn hàng</button>
+            <form action="{{ route('orderManagement.confirm', $order->idOrder) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-success">Xác nhận đơn hàng</button>
+            </form>
+            @elseif($order->status != 'Completed' && $order->status != 'Cancelled')
             <div class="confirmOrder">
                 <button type="button" class="btn btn-danger">Hủy đơn hàng</button>
-                <form action="{{ route('orderManagement.confirm', $order->idOrder) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-success">Xác nhận đơn hàng</button>
-                </form>
             </div>
-            @elseif($order->status != 'Completed' && $order->status != 'Cancelled')
             <form action="{{ route('orderManagement.confirm', $order->idOrder) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn chuyển trạng thái đơn hàng sang thành công không?')">
                 @csrf
                 <button type="submit" class="btn btn-success">Câp nhật trạng thái</button>
@@ -99,8 +100,8 @@
             <h2>Lý do hủy đơn</h2>
 
             <div class="form-group">
-                <label for="reason">Mô tả ngắn</label>
-                <textarea id="reason" name="cancel_reason" class="form-control" rows="3" placeholder="Nhập lý do..." require></textarea>
+                <label for="reason">Nhập nội dung vào ô dưới:</label>
+                <textarea id="reason" name="cancel_reason" class="form-control" rows="3" placeholder="Nhập lý do..." required></textarea>
             </div>
 
             <div class="form-actions">
@@ -126,7 +127,6 @@
             document.querySelector('.reasonCancel').classList.remove("active");
         });
     });
-
 </script>
 
 @endsection

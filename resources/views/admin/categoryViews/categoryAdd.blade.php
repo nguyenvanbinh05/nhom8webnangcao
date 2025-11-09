@@ -50,7 +50,9 @@
 
             // Xóa các lỗi cũ (nếu có)
             form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
-            form.querySelector('.form-control').classList.remove('is-invalid');
+            form.querySelectorAll('.form-control').forEach(function(input) {
+                input.classList.remove('is-invalid');
+            });
             document.querySelector('.formInput').classList.add("active");
         });
     });

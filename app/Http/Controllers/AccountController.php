@@ -5,25 +5,43 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy danh sách theo role
-        $admins = User::where('role', 'admin')->get();
-        $staffs = User::where('role', 'staff')->get();
-        $customers = User::where('role', 'customer')->get();
+        $search = $request->input('search');
+        $role = $request->input('role'); // role filter
 
-        // Truyền dữ liệu sang view
-        return view('admin.accountViews.accountManagement', compact('admins', 'staffs', 'customers'));
+        $query = User::query();
+
+        // Nếu có từ khóa search
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Nếu có role filter
+        if ($role && in_array($role, ['admin', 'staff', 'customer'])) {
+            $query->where('role', $role);
+        }
+
+        // Lấy danh sách tất cả account
+        $accounts = $query->orderBy('role')->get();
+
+        return view('admin.accountViews.accountManagement', compact('accounts', 'search', 'role'));
     }
     public function overview(Request $request)
     {
@@ -74,14 +92,21 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:users,email',
-            'phone'    => 'nullable|string|max:15',
+            'phone'    => 'nullable|string|max:15|unique:users,phone',
             'password' => 'required|min:8|confirmed',
             'role'     => 'required|in:admin,staff,customer',
             'status'   => 'required|in:active,inactive',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('form', 'create'); // đánh dấu form create bị lỗi
+        }
 
         User::create([
             'name'     => $request->name,
@@ -126,14 +151,21 @@ class AccountController extends Controller
             return redirect()->route('accounts.index')->with('error', 'Tài khoản không tồn tại!');
         }
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'nullable|string|max:15|unique:users,phone,' . $user->id,
             'password' => 'nullable|min:6|confirmed',
             'role' => 'required|in:admin,staff,customer',
             'status' => 'required|in:active,inactive',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('form', 'edit'); // đánh dấu form edit bị lỗi
+        }
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -155,7 +187,21 @@ class AccountController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        // Kiểm tra xem có đơn hàng nào liên quan không
+        $orderCount = Order::where('user_id', $user->id)->count();
+
+        if ($orderCount > 0) {
+            return redirect()->route('accounts.index')
+                ->with('error', 'Không thể xóa tài khoản, vì còn đơn hàng liên quan.');
+        }
+
+        // Nếu không có đơn hàng, xóa tài khoản
+        $user->delete();
+
+        return redirect()->route('accounts.index')
+            ->with('success', 'Xóa tài khoản thành công.');
     }
     public function orders(Request $request)
     {
