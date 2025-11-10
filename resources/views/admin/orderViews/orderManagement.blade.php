@@ -13,7 +13,7 @@
                 <input type="text"
                     class="search__input"
                     name="search"
-                    placeholder="Tìm kiếm theo id, tên sản phẩm..."
+                    placeholder="Tìm kiếm ..."
                     value="{{ $search ?? '' }}">
                 <button type="submit" class="search__btn">
                     <i class="fa-solid fa-magnifying-glass search__icon"></i>

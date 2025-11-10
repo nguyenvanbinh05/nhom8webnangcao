@@ -121,6 +121,8 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('.formUpdate').classList.add("active");
+        const form = document.getElementById('editUserForm');
+            form.action = "{{ session('route') }}";
     });
 </script>
 @endif

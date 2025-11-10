@@ -105,7 +105,7 @@ class AccountController extends Controller
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
-                ->with('form', 'create'); // đánh dấu form create bị lỗi
+                ->with('form', 'create');
         }
 
         User::create([
@@ -164,7 +164,8 @@ class AccountController extends Controller
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
-                ->with('form', 'edit'); // đánh dấu form edit bị lỗi
+                ->with('form', 'edit')
+                ->with('route', route('accounts.update', $user->id));
         }
 
         $user->name = $request->name;

@@ -1,30 +1,30 @@
 <div class="formUpdate">
     <div class="overlay" id="overlay">
         <form class="formContent" id="editCategoryForm" method="POST">
-             @csrf
-             @method('PUT')
+            @csrf
+            @method('PUT')
             <h2>Cập nhật thông tin</h2>
 
             <div class="form-group">
                 <label for="editNameCategory">Tên danh mục <span style="color:red">*</span></label>
-                <input type="text" id="editNameCategory" name="nameCategory" 
-                       class="form-control @error('nameCategory') is-invalid @enderror" 
-                       placeholder="Nhập tên danh mục">
+                <input type="text" id="editNameCategory" name="nameCategory"
+                    class="form-control @error('nameCategory') is-invalid @enderror"
+                    placeholder="Nhập tên danh mục" value="{{ old('nameCategory') }}">
                 @error('nameCategory')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="form-group">
                 <label for="description">Mô tả ngắn</label>
-                <textarea id="editdescription" name="description" class="form-control" rows="3"></textarea>
+                <textarea id="editdescription" name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
             </div>
 
             <div class="form-group">
                 <label for="status">Trạng thái</label>
                 <select id="editstatus" name="status" class="form-control">
-                    <option value="Available">Sẵn sàng</option>
-                    <option value="Stopped">Ngừng sử dụng</option>
+                    <option value="Available" {{ old('status', $category->Status ?? '') == 'Available' ? 'selected' : '' }}>Sẵn sàng</option>
+                    <option value="Stopped" {{ old('status', $category->Status ?? '') == 'Stopped' ? 'selected' : '' }}>Ngừng sử dụng</option>
                 </select>
             </div>
 
@@ -41,10 +41,10 @@
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const route = this.dataset.route;
-            const id = this.dataset.id; 
+            const id = this.dataset.id;
             const name = this.dataset.name;
-            const desc = this.dataset.desc; 
-            const status = this.dataset.status; 
+            const desc = this.dataset.desc;
+            const status = this.dataset.status;
 
             const form = document.getElementById('editCategoryForm');
             form.action = route;
@@ -69,10 +69,12 @@
     });
 </script>
 
-@if ($errors->any())
+@if ($errors->any() && session('form') == 'edit')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector('.formInput').classList.add("active");
+        document.querySelector('.formUpdate').classList.add("active");
+        const form = document.getElementById('editCategoryForm');
+        form.action = "{{ session('route') }}";
     });
 </script>
 @endif

@@ -65,7 +65,7 @@
         });
     });
 </script>
-@if ($errors->any())
+@if ($errors->any() && session('form') == 'create')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('.formInput').classList.add("active");

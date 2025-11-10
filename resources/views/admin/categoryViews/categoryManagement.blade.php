@@ -11,7 +11,7 @@
                 <input type="text"
                     class="search__input"
                     name="search"
-                    placeholder="Tìm kiếm theo id, tên sản phẩm..."
+                    placeholder="Tìm kiếm ..."
                     value="{{ $search ?? '' }}">
                 <button type="submit" class="search__btn">
                     <i class="fa-solid fa-magnifying-glass search__icon"></i>
@@ -41,7 +41,7 @@
             </tr>
         </thead>
         <tbody class="table__body">
-            @foreach ($categories as $index => $category)
+            @forelse ($categories as $index => $category)
             <tr class="table__row">
                 <td class="table__cell">{{$index + 1}}</td>
                 <td class="table__cell order">{{ $category->NameCategory }}</td>
@@ -73,7 +73,11 @@
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="7" class="table__cell">Không có kết quả.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

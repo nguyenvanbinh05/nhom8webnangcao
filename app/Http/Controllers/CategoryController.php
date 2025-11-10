@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -16,7 +16,7 @@ class CategoryController extends Controller
         $search = $request->input('search');
 
         // Query
-        $categories = Category::query();
+        $categories = Category::withCount('products');
         if ($search) {
             $categories->where('NameCategory', 'like', "%{$search}%")
                 ->orWhere('Description', 'like', "%{$search}%");
@@ -43,7 +43,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'nameCategory' => 'required|string|max:255|unique:category,NameCategory',
             'description'  => 'nullable|string',
             'status'       => 'required|in:Available,Stopped',
@@ -53,13 +53,21 @@ class CategoryController extends Controller
             'status.required'       => 'Vui lòng chọn trạng thái.',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('form', 'create'); // đánh dấu form create nếu dùng modal
+        }
+
         Category::create([
             'NameCategory' => $request->nameCategory,
             'description'  => $request->description,
             'Status'       => $request->status,
         ]);
 
-        return redirect()->route('category.index')->with('success', 'Thêm danh mục thành công!');
+        return redirect()->route('category.index')
+            ->with('success', 'Thêm danh mục thành công!');
     }
 
     /**
@@ -84,10 +92,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::find($id);
 
-        // Validate với rule unique, nhưng bỏ qua chính bản ghi đang update
-        $request->validate([
+        if (!$category) {
+            return redirect()->route('category.index')
+                ->with('error', 'Danh mục không tồn tại!');
+        }
+
+        // Validator kiểu giống UserController
+        $validator = Validator::make($request->all(), [
             'nameCategory' => 'required|string|max:255|unique:category,NameCategory,' . $category->idCategory . ',idCategory',
             'description'  => 'nullable|string',
             'status'       => 'required|in:Available,Stopped',
@@ -97,13 +110,22 @@ class CategoryController extends Controller
             'status.required'       => 'Vui lòng chọn trạng thái.',
         ]);
 
-        $category->update([
-            'NameCategory' => $request->nameCategory,
-            'description'  => $request->description,
-            'Status'       => $request->status,
-        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('form', 'edit') // đánh dấu form edit
+                ->with('route', route('category.update', $category->idCategory));
+        }
 
-        return redirect()->route('category.index')->with('success', 'Cập nhật danh mục thành công!');
+        // Cập nhật dữ liệu
+        $category->NameCategory = $request->nameCategory;
+        $category->description  = $request->description;
+        $category->Status       = $request->status;
+        $category->save();
+
+        return redirect()->route('category.index')
+            ->with('success', 'Cập nhật danh mục thành công!');
     }
 
     /**

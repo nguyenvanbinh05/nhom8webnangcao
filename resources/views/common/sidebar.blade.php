@@ -35,6 +35,18 @@
                 <span class="sidebar__text">Quản lý tài khoản</span>
             </a>
         </li>
+        <li class="sidebar__item {{ request()->routeIs('supplier.*') ? 'item-active' : '' }}">
+            <a href="{{ route('supplier.index') }}">
+                <i class="fas fa-users sidebar__icon"></i>
+                <span class="sidebar__text">Quản lý nhà cung cấp</span>
+            </a>
+        </li>
+        <li class="sidebar__item {{ request()->routeIs('admin.report') ? 'item-active' : '' }}">
+            <a href="{{ route('admin.report') }}">
+                <i class="fas fa-users sidebar__icon"></i>
+                <span class="sidebar__text">Báo cáo & thống kê</span>
+            </a>
+        </li>
         @endif
     </ul>
 </div>
