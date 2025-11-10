@@ -25,7 +25,7 @@
             </li>
             <li class="sidebar__item {{ request()->routeIs('adminProduct.*') ? 'item-active' : '' }}">
                 <a href="{{ route('adminProduct.index') }}">
-                    <i class="fas fa-boxes sidebar__icon"></i>
+                    <i class="fas fa-solid fa-mug-hot sidebar__icon"></i>
                     <span class="sidebar__text">Quản lý sản phẩm</span>
                 </a>
             </li>
@@ -37,14 +37,20 @@
             </li>
             <li class="sidebar__item {{ request()->routeIs('supplier.*') ? 'item-active' : '' }}">
                 <a href="{{ route('supplier.index') }}">
-                    <i class="fas fa-users sidebar__icon"></i>
+                    <i class="fas fa-solid fa-boxes-packing sidebar__icon"></i>
                     <span class="sidebar__text">Quản lý nhà cung cấp</span>
                 </a>
             </li>
             <li class="sidebar__item {{ request()->routeIs('admin.report') ? 'item-active' : '' }}">
                 <a href="{{ route('admin.report') }}">
-                    <i class="fas fa-users sidebar__icon"></i>
+                    <i class="fa fa-solid fa-chart-simple sidebar__icon"></i>
                     <span class="sidebar__text">Báo cáo & thống kê</span>
+                </a>
+            </li>
+            <li class="sidebar__item {{ request()->routeIs('shipping.*') ? 'item-active' : '' }}">
+                <a href="{{ route('shipping.index') }}">
+                    <i class="fas fa-truck sidebar__icon"></i>
+                    <span class="sidebar__text">Quản lý vận chuyển</span>
                 </a>
             </li>
 

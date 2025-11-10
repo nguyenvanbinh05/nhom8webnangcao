@@ -29,7 +29,7 @@ class AdminProductController extends Controller
                 ->orWhereHas('category', function ($query) use ($search) {
                     $query->where('NameCategory', 'like', "%{$search}%");
                 });
-                
+
             $products = $products->get();
             return view('admin.productViews.productManagement', compact('products', 'search'));
         }
@@ -163,7 +163,7 @@ class AdminProductController extends Controller
             'NameProduct' => 'required|string|max:255',
             'CategoryId' => 'required|exists:category,idCategory',
             'Price' => 'nullable|numeric|min:0',
-            'Description' => 'required|string',
+            'Description' => 'nullable|string',
             'Status' => 'required|in:Available,Stopped',
             'MainImage' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
             'additionalImages' => 'nullable|array',
