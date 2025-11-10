@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-
+use App\Http\Controllers\ShippingAreaController;
 
 
 Route::get('/', function () {
@@ -47,10 +47,12 @@ Route::prefix('admin')->group(function () {
     });
 
     Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
-        route::resource('/accounts', AccountController::class);
+        Route::resource('/accounts', AccountController::class);
         require __DIR__ . '/supplier.php';
         require __DIR__ . '/ingredient.php';
         require __DIR__ . '/adminProduct.php';
         require __DIR__ . '/category.php';
+        Route::resource('shipping', ShippingAreaController::class);
+        // Route::post('shipping/check-support', [ShippingAreaController::class, 'checkSupport'])->name('shipping.check-support');
     });
 });

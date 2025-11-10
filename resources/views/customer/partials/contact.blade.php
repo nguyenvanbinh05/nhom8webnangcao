@@ -25,7 +25,7 @@
                     @csrf
                     <input type="email" name="email"
                         placeholder="Email của bạn. (chúng tôi sẽ liên hệ với bạn qua email này !)" required>
-                    <input type="text" name="subject" placeholder="Tiêu đề">
+                    <input type="text" name="subject" placeholder="Chủ đề">
                     <textarea name="message" placeholder="Nội dung" rows="4" required></textarea>
                     <button type="submit" class="btn-submit">Gửi</button>
                 </form>

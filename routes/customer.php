@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
@@ -16,12 +17,14 @@ Route::post('/cart/add',      [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update',   [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove',   [CartController::class, 'remove'])->name('cart.remove');
 
-use App\Http\Controllers\CheckoutController;
+
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout',  [CheckoutController::class, 'show'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'place'])->name('checkout.place');
+    Route::post('/checkout/calculate-shipping', [CheckoutController::class, 'calculateShippingCost'])
+        ->name('checkout.calculate-shipping');
 });
 
 use App\Http\Controllers\AccountController;

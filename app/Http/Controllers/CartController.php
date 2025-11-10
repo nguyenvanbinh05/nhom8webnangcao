@@ -31,7 +31,7 @@ class CartController extends Controller
         $token = $request->cookie('cart_token');
         if (!$token) {
             $token = (string) Str::uuid();
-            Cookie::queue('cart_token', $token, 60 * 24 * 30); // 30 ngày
+            Cookie::queue('cart_token', $token, 60 * 24 * 30);
         }
 
         $cart = Cart::firstOrCreate(['cart_token' => $token], ['user_id' => null]);

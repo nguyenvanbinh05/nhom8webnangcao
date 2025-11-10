@@ -246,6 +246,10 @@ class AdminProductController extends Controller
     {
 
         $product = Product::findOrFail($id);
+        if ($product->orderItems()->exists()) {
+            return redirect()->route('adminProduct.index')
+                ->with('error', 'Không thể xóa sản phẩm vì đã có trong đơn hàng!');
+        }
 
         $mainImagePath = str_replace('storage/', '', $product->MainImage);
         $additionalImagePaths = $product->additationImages()->pluck('AdditationLink')->map(function ($path) {

@@ -37,11 +37,11 @@
             </div>
 
             <div class="btn-change">
-                <x-primary-button class="btn">{{ __('Lưu') }}</x-primary-button>
+                <x-primary-button class="btn">{{ __('Đổi mật khẩu') }}</x-primary-button>
 
                 @if (session('status') === 'password-updated')
                     <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                        class="status">{{ __('Đã lưu.') }}</p>
+                        class="status">{{ __('Cập nhật mật khẩu thành công.') }}</p>
                 @endif
             </div>
         </form>

@@ -141,29 +141,29 @@
 
 <script>
     // Preview ảnh chính
-    const mainImageInput = document.getElementById('mainImage');
-    const mainImagePreview = document.getElementById('mainImagePreview');
+    const mainImageInput1 = document.getElementById('mainImage');
+    const mainImagePreview1 = document.getElementById('mainImagePreview');
 
-    mainImageInput.addEventListener('change', function() {
+    mainImageInput1.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
-            mainImagePreview.src = URL.createObjectURL(file);
-            mainImagePreview.style.display = 'block';
+            mainImagePreview1.src = URL.createObjectURL(file);
+            mainImagePreview1.style.display = 'block';
         }
     });
 
     // Preview ảnh phụ
-    const additionalImageInput = document.getElementById('additionalImage');
-    const additionalImagesPreview = document.getElementById('additionalImagesPreview');
+    const additionalImageInput1 = document.getElementById('additionalImage');
+    const additionalImagesPreview1 = document.getElementById('additionalImagesPreview');
 
-    additionalImageInput.addEventListener('change', function() {
-        additionalImagesPreview.innerHTML = '';
+    additionalImageInput1.addEventListener('change', function() {
+        additionalImagesPreview1.innerHTML = '';
         Array.from(this.files).forEach(file => {
             const img = document.createElement('img');
             img.src = URL.createObjectURL(file);
             img.style.maxWidth = '100px';
             img.style.marginRight = '5px';
-            additionalImagesPreview.appendChild(img);
+            additionalImagesPreview1.appendChild(img);
         });
     });
 </script>

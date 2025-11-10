@@ -57,7 +57,7 @@
                     <div class="product-quantity">
                         <label for="quantity">Số lượng:</label>
                         <div class="quantity-box">
-                            <input id="quantity" type="number" value="1" min="1">
+                            <input id="quantity" type="number" value="1" min="1" max="100">
                         </div>
                     </div>
 

@@ -15,6 +15,13 @@
                 @csrf
                 <h2>Thông tin giao hàng</h2>
 
+                @if ($errors->has('address'))
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ $errors->first('address') }}
+                    </div>
+                @endif
+
                 <div class="grid-2">
                     <div class="field">
                         <label for="name">Họ và tên</label>
@@ -90,7 +97,7 @@
                             $p = $it->product;
                             $name = $p?->NameProduct ?? ('Sản phẩm #' . $it->product_id);
                             $img = $p && $p->MainImage ? asset('storage/' . $p->MainImage) : asset('images/products/placeholder.svg');
-                            $line = (int) $it->price * (int) $it->quantity;               // GIÁ * SL
+                            $line = (int) $it->price * (int) $it->quantity;
                             $lineTx = number_format($line, 0, ',', '.') . 'đ';
                         @endphp
                         <li class="cart-item">
@@ -98,7 +105,12 @@
                             <div class="info">
                                 <a href="{{ route('product.show', $p?->idProduct ?? $it->product_id) }}"
                                     class="name">{{ $name }}</a>
-                                <div class="meta">Size {{ $it->size ?: '—' }} • x{{ $it->quantity }}</div>
+                                <div class="meta">
+                                    @if ($it->size)
+                                        Size {{ $it->size }} *
+                                    @endif
+                                    x{{ $it->quantity }}
+                                </div>
                             </div>
                             <div class="price">{{ $lineTx }}</div>
                         </li>
@@ -106,11 +118,25 @@
                 </ul>
 
                 <div class="totals">
-                    <div class="row"><span>Tạm tính:</span><span>{{ number_format($subtotal, 0, ',', '.') }}đ</span></div>
-                    <div class="row"><span>Phí ship:</span><span>Miễn phí</span></div>
+                    <div class="row"><span>Tạm tính:</span><span
+                            id="subtotal-display">{{ number_format($subtotal, 0, ',', '.') }}đ</span></div>
+                    <div class="row">
+                        <span>Phí ship:</span>
+                        <span id="shipping-display">
+                            @if ($shipping === 0)
+                                <span style="color: #999; font-style: italic;">-- Chọn địa chỉ để xem phí --</span>
+                            @else
+                                {{ number_format($shipping, 0, ',', '.') }}đ
+                            @endif
+                        </span>
+                    </div>
+                    <div class="shipping-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Miễn phí giao hàng cho đơn hàng trên 99.000đ</span>
+                    </div>
                     <div class="grand">
                         <span>Tổng cộng</span>
-                        <span class="grand-price">{{ number_format($total, 0, ',', '.') }}đ</span>
+                        <span class="grand-price" id="total-display">{{ number_format($total, 0, ',', '.') }}đ</span>
                     </div>
                 </div>
                 <div class="actions">
@@ -140,8 +166,70 @@
             const fullAddress = document.getElementById('full_address');
             const form = document.getElementById('checkout-form');
 
+            const subtotal = {{ $subtotal }};
+
+            // Cập nhật phí ship khi thay đổi địa chỉ
+            function updateShippingCost() {
+                if (!cityId.value || !districtId.value || !wardId.value) {
+                    console.log('Chưa chọn đủ địa chỉ');
+                    return;
+                }
+
+                console.log('Đang tính phí ship...', {
+                    subtotal: subtotal,
+                    province_id: cityId.value,
+                    district_id: districtId.value,
+                    ward_id: wardId.value,
+                });
+
+                axios.post('{{ route("checkout.calculate-shipping") }}', {
+                    subtotal: subtotal,
+                    province_id: cityId.value,
+                    district_id: districtId.value,
+                    ward_id: wardId.value,
+                }, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                }).then(res => {
+                    console.log('Kết quả:', res.data);
+                    const data = res.data;
+
+                    if (!data.supported) {
+                        // Khu vực không hỗ trợ
+                        document.getElementById('shipping-display').innerHTML =
+                            '<span style="color: #dc3545; font-weight: bold;">❌ ' + data.message + '</span>';
+                        document.getElementById('total-display').textContent =
+                            number_format(subtotal, 0, ',', '.') + 'đ';
+                    } else {
+                        // Cập nhật phí ship
+                        if (data.shipping_cost === 0) {
+                            document.getElementById('shipping-display').innerHTML =
+                                '<span style="color: #22c55e; font-weight: bold;">✓ Miễn phí</span>';
+                        } else {
+                            document.getElementById('shipping-display').textContent =
+                                number_format(data.shipping_cost, 0, ',', '.') + 'đ';
+                        }
+                        document.getElementById('total-display').textContent =
+                            number_format(data.total, 0, ',', '.') + 'đ';
+                    }
+                }).catch(err => {
+                    console.error('Lỗi tính phí ship:', err);
+                });
+            }
+
+            // Helper format number
+            function number_format(n, decimals, dec_point, thousands_sep) {
+                var c = isNaN(decimals = Math.abs(decimals)) ? 2 : decimals,
+                    d = dec_point == undefined ? "," : dec_point,
+                    t = thousands_sep == undefined ? "." : thousands_sep,
+                    s = n < 0 ? "-" : "",
+                    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+                    j = (j = i.length) > 3 ? j % 3 : 0;
+                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+            }
+
             document.getElementById('place-order').addEventListener('click', function () {
-                // Ghép địa chỉ trước khi submit
                 if (!addressDetail.value.trim() || !cityName.value || !districtName.value || !wardName.value) {
                     alert('Vui lòng nhập địa chỉ & chọn đầy đủ Tỉnh/Quận/Xã.');
                     return;
@@ -203,13 +291,48 @@
                         wards.options[wards.options.length] = new Option(w.Name, w.Id);
                     }
                     wards.disabled = false;
+
+                    updateShippingCost();
                 };
 
                 wards.onchange = function () {
                     wardId.value = this.value || '';
                     wardName.value = this.options[this.selectedIndex]?.text || '';
+
+                    updateShippingCost();
                 };
             });
         })();
     </script>
+
+    <style>
+        .alert {
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shipping-info {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background-color: #e7f3ff;
+            color: #0056b3;
+            border-left: 3px solid #0056b3;
+            border-radius: 3px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .shipping-info i {
+            font-size: 14px;
+        }
+    </style>
 @endsection

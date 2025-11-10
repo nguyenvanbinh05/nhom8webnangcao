@@ -29,7 +29,7 @@ class AccountController extends Controller
     {
         $user = $request->user();
 
-        // Có thể lấy địa chỉ mặc định từ bảng orders gần nhất
+
         $lastOrder = Order::where('user_id', $user->id)->latest()->first();
 
         return view('customer.account.overview', [
@@ -156,6 +156,16 @@ class AccountController extends Controller
     public function destroy(string $id)
     {
         //
+        // Tìm người dùng theo ID
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Không tìm thấy người dùng!');
+        }
+
+        $user->delete();
+
+        return redirect()->route('accounts.index')->with('success', 'Đã xóa tài khoản người dùng thành công!');
     }
     public function orders(Request $request)
     {

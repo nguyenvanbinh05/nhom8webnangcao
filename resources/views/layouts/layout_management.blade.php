@@ -7,6 +7,7 @@
 
     <!-- css -->
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="icon" type="image/svg" href="{{ asset('images/logo/logo-web.svg') }}">
 
     <!-- icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"

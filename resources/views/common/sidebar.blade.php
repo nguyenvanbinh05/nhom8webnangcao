@@ -17,24 +17,30 @@
             </a>
         </li>
         @if(Auth::user()->role === 'admin')
-        <li class="sidebar__item {{ request()->routeIs('category.*') ? 'item-active' : '' }}">
-            <a href="{{ route('category.index') }}">
-                <i class="fas fa-boxes sidebar__icon"></i>
-                <span class="sidebar__text">Quản lý danh mục</span>
-            </a>
-        </li>
-        <li class="sidebar__item {{ request()->routeIs('adminProduct.*') ? 'item-active' : '' }}">
-            <a href="{{ route('adminProduct.index') }}">
-                <i class="fas fa-boxes sidebar__icon"></i>
-                <span class="sidebar__text">Quản lý sản phẩm</span>
-            </a>
-        </li>
-        <li class="sidebar__item {{ request()->routeIs('accounts.*') ? 'item-active' : '' }}">
-            <a href="{{ route('accounts.index') }}">
-                <i class="fas fa-users sidebar__icon"></i>
-                <span class="sidebar__text">Quản lý tài khoản</span>
-            </a>
-        </li>
+            <li class="sidebar__item {{ request()->routeIs('category.*') ? 'item-active' : '' }}">
+                <a href="{{ route('category.index') }}">
+                    <i class="fas fa-boxes sidebar__icon"></i>
+                    <span class="sidebar__text">Quản lý danh mục</span>
+                </a>
+            </li>
+            <li class="sidebar__item {{ request()->routeIs('adminProduct.*') ? 'item-active' : '' }}">
+                <a href="{{ route('adminProduct.index') }}">
+                    <i class="fas fa-boxes sidebar__icon"></i>
+                    <span class="sidebar__text">Quản lý sản phẩm</span>
+                </a>
+            </li>
+            <li class="sidebar__item {{ request()->routeIs('accounts.*') ? 'item-active' : '' }}">
+                <a href="{{ route('accounts.index') }}">
+                    <i class="fas fa-users sidebar__icon"></i>
+                    <span class="sidebar__text">Quản lý tài khoản</span>
+                </a>
+            </li>
+            <li class="sidebar__item {{ request()->routeIs('admin.shipping.*') ? 'item-active' : '' }}">
+                <a href="{{ route('shipping.index') }}">
+                    <i class="fas fa-truck sidebar__icon"></i>
+                    <span class="sidebar__text">Quản lý vận chuyển</span>
+                </a>
+            </li>
         @endif
     </ul>
 </div>

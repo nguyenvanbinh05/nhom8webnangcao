@@ -187,6 +187,12 @@
     border-radius: 8px;
     object-fit: fill;
 }
+.cart-item .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
 .cart-item .name {
     color: #333;
     font-weight: 600;
@@ -196,12 +202,12 @@
     color: var(--accent);
 }
 .cart-item .meta {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: #888;
 }
 .cart-item .price {
     color: #8b8b8b;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 .totals {
