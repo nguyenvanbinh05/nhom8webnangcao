@@ -23,6 +23,7 @@ class Order extends Model
         'shipping',
         'discount',
         'total',
+        'cancel_reason',
         'status'
     ];
 
@@ -34,5 +35,30 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'idOrder');
+    }
+
+    
+    public function getStatusLabelAttribute()
+    {
+        $labels = [
+            'Pending' => 'Chờ xác nhận',
+            'Processing' => 'Đang xử lý',
+            'Completed' => 'Hoàn thành',
+            'Cancelled' => 'Đã hủy',
+        ];
+
+        return $labels[$this->status] ?? $this->status;
+    }
+
+    public function getStatusColorAttribute()
+    {
+        $colors = [
+            'Pending' => 'pending',    
+            'Processing' => 'processing',    
+            'Completed' => 'completed', 
+            'Cancelled' => 'cancelled',  
+        ];
+
+        return $colors[$this->status] ?? 'pending';
     }
 }

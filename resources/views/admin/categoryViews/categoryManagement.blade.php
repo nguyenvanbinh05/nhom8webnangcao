@@ -5,8 +5,23 @@
 @section('content')
 <div class="content__body">
     <div class="content__header">
+        <!-- Search -->
+        <form action="{{ route('category.index') }}" method="GET">
+            <div class="search">
+                <input type="text"
+                    class="search__input"
+                    name="search"
+                    placeholder="Tìm kiếm ..."
+                    value="{{ $search ?? '' }}">
+                <button type="submit" class="search__btn">
+                    <i class="fa-solid fa-magnifying-glass search__icon"></i>
+                </button>
+            </div>
+        </form>
         <!-- Action buttons -->
-        <a href="{{ route('category.create') }}" class="buttonAddForm">
+        <a href="#"
+         class="buttonAddForm"
+         data-route="{{ route('category.store') }}">
             <i class="fa-solid fa-plus"></i>
             <span>Thêm mới</span>
         </a>
@@ -26,7 +41,7 @@
             </tr>
         </thead>
         <tbody class="table__body">
-            @foreach ($categories as $index => $category)
+            @forelse ($categories as $index => $category)
             <tr class="table__row">
                 <td class="table__cell">{{$index + 1}}</td>
                 <td class="table__cell order">{{ $category->NameCategory }}</td>
@@ -58,7 +73,11 @@
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="7" class="table__cell">Không có kết quả.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

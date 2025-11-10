@@ -7,6 +7,8 @@ use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Http\Controllers\ShippingAreaController;
+use App\Http\Controllers\ReportController;
+
 
 
 Route::get('/', function () {
@@ -48,6 +50,8 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
         Route::resource('/accounts', AccountController::class);
+        route::resource('/accounts', AccountController::class);
+        Route::get('/admin/report', [ReportController::class, 'index'])->name('admin.report');
         require __DIR__ . '/supplier.php';
         require __DIR__ . '/ingredient.php';
         require __DIR__ . '/adminProduct.php';

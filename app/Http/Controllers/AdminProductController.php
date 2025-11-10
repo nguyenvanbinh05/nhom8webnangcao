@@ -22,13 +22,17 @@ class AdminProductController extends Controller
         // Query
         $products = Product::query();
         if ($search) {
-            $products->where('NameProduct', 'like', "%{$search}%")
-                ->orWhere('Description', 'like', "%{$search}%");
-
+            $products->where(function ($query) use ($search) {
+                $query->where('NameProduct', 'like', "%{$search}%")
+                    ->orWhere('Description', 'like', "%{$search}%");
+            })
+                ->orWhereHas('category', function ($query) use ($search) {
+                    $query->where('NameCategory', 'like', "%{$search}%");
+                });
+                
             $products = $products->get();
             return view('admin.productViews.productManagement', compact('products', 'search'));
         }
-
         // Lấy tất cả sản phẩm kèm category, size và ảnh bổ sung
         $products = Product::with(['category', 'sizes', 'additationImages'])->get();
 
@@ -40,7 +44,8 @@ class AdminProductController extends Controller
      */
     public function create()
     {
-        return View('admin.productViews.productAdd');
+        $categories = Category::where('Status', 'Available')->get();
+        return View('admin.productViews.productAdd', compact('categories'));
     }
 
     /**
@@ -74,8 +79,8 @@ class AdminProductController extends Controller
             'sizes' => 'required_without:Price|nullable|array',
             'sizes.*.Size' => 'required_with:sizes|in:S,M,L',
             'sizes.*.Price' => 'required_with:sizes|numeric',
-            'additationImages' => 'nullable|array',
-            'additationImages.*' => 'required|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'additionalImages' => 'nullable|array',
+            'additionalImages.*' => 'required|image|mimes:jpg,png,jpeg,gif|max:2048',
             'Status' => 'required|in:Available,Stopped',
         ]);
 
@@ -109,8 +114,8 @@ class AdminProductController extends Controller
             }
         }
         // Nếu có ảnh bổ sung
-        if ($request->hasFile('additationImages')) {
-            foreach ($request->file('additationImages') as $image) {
+        if ($request->hasFile('additionalImages')) {
+            foreach ($request->file('additionalImages') as $image) {
                 $additation_img_extension = $image->getClientOriginalExtension();
                 $additation_img_name = time() . '_' . Str::random(20) . '.' . $additation_img_extension;
                 $path = $image->storeAs('images', $additation_img_name);
@@ -141,7 +146,7 @@ class AdminProductController extends Controller
     public function edit(string $id)
     {
         $product = Product::with(['category', 'sizes', 'additationImages'])->findOrFail($id);
-        $categories = Category::all();
+        $categories = Category::where('Status', 'Available')->get();
         return view('admin.productViews.productEdit', compact('product', 'categories'));
     }
 
@@ -161,10 +166,9 @@ class AdminProductController extends Controller
             'Description' => 'required|string',
             'Status' => 'required|in:Available,Stopped',
             'MainImage' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
-            'additationImages.*' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
+            'additionalImages' => 'nullable|array',
+            'additionalImages.*' => 'required|image|mimes:jpg,png,jpeg,gif|max:2048',
             'productType' => 'required|in:single,multiple',
-            'sizes.*.Size' => 'required_if:productType,multiple',
-            'sizes.*.Price' => 'required_if:productType,multiple|numeric|min:0'
         ]);
 
         // 3. Cập nhật thông tin cơ bản
@@ -197,22 +201,38 @@ class AdminProductController extends Controller
             $product->sizes()->delete();
         } elseif ($request->productType === 'multiple') {
             $product->Price = null;
-            // Xóa size cũ trước khi thêm mới
             $product->sizes()->delete();
 
-            if ($request->has('sizes')) {
-                foreach ($request->sizes as $size) {
-                    ProductSize::create([
-                        'Size' => $size['Size'],
-                        'Price' => $size['Price'],
-                        'ProductId' => $product->idProduct,
-                    ]);
+            // Lọc ra chỉ những size mà người dùng thực sự chọn
+            $sizes = collect($request->sizes)
+                ->filter(fn($s) => !empty($s['Size']) && !empty($s['Price']))
+                ->values();
+
+            // Nếu không chọn size nào -> báo lỗi
+            if ($sizes->isEmpty()) {
+                return back()
+                    ->withErrors(['sizes' => 'Vui lòng chọn ít nhất 1 size và nhập giá.'])
+                    ->withInput();
+            }
+
+            // Validate giá trị từng size
+            foreach ($sizes as $size) {
+                if (!is_numeric($size['Price']) || $size['Price'] < 0) {
+                    return back()
+                        ->withErrors(['sizes' => 'Giá size phải là số và lớn hơn 0.'])
+                        ->withInput();
                 }
+
+                ProductSize::create([
+                    'Size' => $size['Size'],
+                    'Price' => $size['Price'],
+                    'ProductId' => $product->idProduct,
+                ]);
             }
         }
 
         // 6. Xử lý ảnh phụ
-        if ($request->hasFile('additationImages')) {
+        if ($request->hasFile('additionalImages')) {
             if ($product->additationImages) {
                 foreach ($product->additationImages as $oldImage) {
                     if (Storage::exists($oldImage->AdditationLink)) {
@@ -221,7 +241,7 @@ class AdminProductController extends Controller
                     $oldImage->delete();
                 }
             }
-            foreach ($request->file('additationImages') as $image) {
+            foreach ($request->file('additionalImages') as $image) {
                 $additation_img_extension = $image->getClientOriginalExtension();
                 $additation_img_name = time() . '_' . Str::random(20) . '.' . $additation_img_extension;
                 $path = $image->storeAs('images', $additation_img_name);

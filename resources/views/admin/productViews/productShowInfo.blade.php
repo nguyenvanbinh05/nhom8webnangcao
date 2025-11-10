@@ -26,7 +26,7 @@
         </div>
 
         <div class="apd-right">
-            <h3 class="apd-product-name">{{ $product->NameProduct }}</h3>
+            <h3 class="apd-product-name">Sản phẩm: {{ $product->NameProduct }}</h3>
 
             <table class="apd-info-table">
                 <tr>
@@ -61,8 +61,8 @@
                 </tr>
             </table>
 
-            <h4 class="apd-subtitle">Danh sách kích cỡ</h4>
             @if($product->sizes->count() > 0)
+            <h4 class="apd-subtitle">Danh sách kích cỡ</h4>
             <table class="apd-size-table">
                 <thead>
                     <tr>
@@ -79,13 +79,11 @@
                     @endforeach
                 </tbody>
             </table>
-            @else
-            <p>Không có kích cỡ nào.</p>
             @endif
 
             <div class="apd-action-buttons">
                 <a href="{{ route('adminProduct.index') }}" class="product-form__button product-form__button--cancel">Đóng</a>
-                <a href="{{ route('adminProduct.index', $product->idProduct) }}" class="product-form__button product-form__button--save">Sửa sản phẩm</a>
+                <a href="{{ route('adminProduct.edit', $product->idProduct) }}" class="product-form__button product-form__button--save">Sửa sản phẩm</a>
             </div>
         </div>
     </div>

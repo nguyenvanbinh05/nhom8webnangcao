@@ -4,16 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $suppliers = Supplier::all();
-        return view('admin.supplierViews.supplierManagement', compact('suppliers'));
+        $search = $request->input('search');
+
+        $suppliers = Supplier::query()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })
+            ->get();
+
+        return view('admin.supplierViews.supplierManagement', compact('suppliers', 'search'));
     }
 
     /**
@@ -29,16 +39,27 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email',
-            'address' => 'nullable|string',
-            'note' => 'nullable|string',
+        $validator = Validator::make($request->all(), [
+            'name'    => 'required|string|max:255',
+            'phone'   => 'required|string|max:20|unique:suppliers,phone',
+            'email'   => 'nullable|email|unique:suppliers,email',
+            'address' => 'nullable|string|max:255',
+            'note'    => 'nullable|string|max:500',
+        ], [
+            'phone.unique' => 'Số điện thoại này đã tồn tại.',
+            'email.unique' => 'Email này đã tồn tại.',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('form', 'create'); // đánh dấu form create lỗi
+        }
+
         Supplier::create($request->all());
-        return redirect()->back()->with('success', 'Thêm nhà cung cấp thành công!');
+
+        return redirect()->route('supplier.index')->with('success', 'Thêm nhà cung cấp thành công!');
     }
 
     /**
@@ -63,31 +84,44 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $supplier = Supplier::find($id);
+
+        if (!$supplier) {
+            return redirect()->route('supplier.index')
+                ->with('error', 'Nhà cung cấp không tồn tại!');
+        }
+
+        $validator = Validator::make($request->all(), [
             'supplierName' => 'required|string|max:255',
-            'phone'        => 'nullable|string|max:20',
-            'email'        => 'nullable|email|max:255',
+            'phone'        => 'nullable|string|max:20|unique:suppliers,phone,' . $supplier->id,
+            'email'        => 'nullable|email|max:255|unique:suppliers,email,' . $supplier->id,
             'address'      => 'nullable|string|max:255',
             'note'         => 'nullable|string|max:500',
+        ], [
+            'phone.unique' => 'Số điện thoại này đã tồn tại.',
+            'email.unique' => 'Email này đã tồn tại.',
         ]);
 
-        // Lấy bản ghi cần cập nhật
-        $supplier = Supplier::findOrFail($id);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('form', 'edit')
+                ->with('route', route('supplier.update', $supplier->id));
+        }
 
-        // Gán giá trị mới
         $supplier->name    = $request->supplierName;
         $supplier->phone   = $request->phone;
         $supplier->email   = $request->email;
         $supplier->address = $request->address;
         $supplier->note    = $request->note;
 
-        // Lưu lại
         $supplier->save();
 
-        // Quay lại trang danh sách kèm thông báo
-        return redirect()->route('supplier.index')->with('success', 'Cập nhật nhà cung cấp thành công!');
+        return redirect()->route('supplier.index')
+            ->with('success', 'Cập nhật nhà cung cấp thành công!');
     }
 
     /**

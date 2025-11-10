@@ -6,6 +6,19 @@
 
 <div class="content_body">
     <div class="content__header">
+        <!-- Search -->
+        <form action="{{ route('supplier.index') }}" method="GET">
+            <div class="search">
+                <input type="text"
+                    class="search__input"
+                    name="search"
+                    placeholder="Tìm kiếm ..."
+                    value="{{ $search ?? '' }}">
+                <button type="submit" class="search__btn">
+                    <i class="fa-solid fa-magnifying-glass search__icon"></i>
+                </button>
+            </div>
+        </form>
         <!-- Action buttons -->
         <a href="#" class="buttonAddForm">
             <i class="fa-solid fa-plus"></i>
@@ -37,9 +50,17 @@
                 <td class="table__cell note">{{ $supplier->note }}</td>
                 <td class="table__cell actions-column">
                     <div class="action-item">
-                        <button class="actions__btn buttonEditForm" data-id="{{ $supplier->id }}">
+                        <a href="#"
+                            class="actions__btn buttonEditForm"
+                            data-id="{{ $supplier->id }}"
+                            data-name="{{ $supplier->name }}"
+                            data-phone="{{ $supplier->phone }}"
+                            data-email="{{ $supplier->email }}"
+                            data-address="{{ $supplier->address }}"
+                            data-note="{{ $supplier->note }}"
+                            data-route="{{ route('supplier.update', $supplier->id) }}">
                             <i class="fa-solid fa-pen-to-square actions__icon"></i>
-                        </button>
+                        </a>
                         <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
